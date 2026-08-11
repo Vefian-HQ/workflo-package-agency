@@ -1,0 +1,41 @@
+# =============================================================================
+# What this package has to ask the organization before it can work.
+#
+# Three questions, and the first one is the whole point of this slice: WHICH of
+# your connections is the one your operators talk to us through. Not "what kind
+# of channel" — the package has no opinion about that and must not acquire one.
+# The organization answers with an address; whatever is behind that address is
+# the Adapter's business.
+# =============================================================================
+
+configuration:
+
+  task_manager:
+    type: string
+    required: true
+    description: >
+      Which of the tools this platform can talk to is the one this organization
+      actually keeps its work in. Workflo coordinates; that tool executes and
+      stores. The package has no opinion about which one it is and must not
+      acquire one.
+
+  operator_channel:
+    type: string
+    required: true
+    description: >
+      The address of the connection this organization's operators coordinate
+      through — in whatever form that connection's provider issues addresses in.
+      Messages arriving anywhere else are not this package's.
+
+  operator_user:
+    type: string
+    required: true
+    description: The email of the user who coordinates work.
+
+  operator_channel_id:
+    type: string
+    required: true
+    description: >
+      The identity that user is known by on the operator channel. The platform
+      already keeps this to know who is speaking; the package only needs to know
+      it is them.

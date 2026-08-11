@@ -1,0 +1,135 @@
+# =============================================================================
+# What arrives, and what it does to the work.
+#
+# Every one of these comes in `via: operator_channel` — a ROLE, never a medium.
+# This package does not know and must not know which pipe an organization's
+# people are reachable on. It knows that one of them is where its operators
+# coordinate; the organization says which; the platform compares.
+#
+# That is the whole of the seam. Swapping the tool the operator talks through is
+# a different answer to a configuration question and a different Adapter behind
+# the connection — this file does not change, and cannot need to.
+# =============================================================================
+
+inputs:
+
+  abrir_proyecto:
+    label: Abrir un proyecto
+    via: operator_channel
+    from: operator
+    opens: proyecto
+    phrase: PROYECTO
+    captures:
+      nombre: rest
+    acknowledge: Proyecto abierto.
+
+  crear_tarea:
+    label: Crear una tarea
+    via: operator_channel
+    from: operator
+    opens: tarea
+    phrase: TAREA
+    captures:
+      titulo: rest
+    sets:
+      prioridad: normal
+    acknowledge: Tarea anotada.
+
+  empezar_tarea:
+    label: Empezar una tarea
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer]
+    phrase: EMPEZANDO
+    refers_to: que_hago_ahora
+    to: [en_curso]
+    acknowledge: Anotado, está en curso.
+
+  retomar_tarea:
+    label: Se destrabó, la retomo
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [esperando]
+    phrase: RETOMANDO
+    # Otra vista, porque los renglones que el operador tiene delante cuando dice
+    # esto son los de lo que estaba esperando. Un comando numera contra la lista
+    # en la que el trabajo del que habla realmente aparece.
+    refers_to: que_estoy_esperando
+    to: [en_curso]
+    acknowledge: Anotado, vuelve a estar en curso.
+
+  trabar_tarea:
+    label: La tarea está esperando algo
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso]
+    phrase: ESPERANDO
+    refers_to: que_hago_ahora
+    captures:
+      esperando_a: rest
+    to: [esperando]
+    acknowledge: Anotado, queda esperando.
+
+  terminar_tarea:
+    label: La tarea está hecha
+    via: operator_channel
+    from: operator
+    advances: tarea
+    # Nada salta de `por_hacer` a `hecha`: algo que nadie empezó y que ya está
+    # hecho no pasó por acá, y la máquina de la tarea lo dice antes que nadie.
+    when_state: [en_curso]
+    phrase: HECHO
+    refers_to: que_hago_ahora
+    to: [hecha]
+    acknowledge: Hecha.
+
+  priorizar_tarea:
+    label: Priorizar una tarea
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso]
+    phrase: URGENTE
+    refers_to: que_hago_ahora
+    sets:
+      prioridad: alta
+    acknowledge: Listo, queda arriba.
+
+  que_hago_ahora:
+    label: ¿Qué hago ahora?
+    via: operator_channel
+    from: operator
+    phrase: QUE HAGO
+    answers_with: que_hago_ahora
+    empty: No tenés nada pendiente.
+
+  que_esta_pasando:
+    label: ¿Qué está pasando?
+    via: operator_channel
+    from: operator
+    phrase: QUE PASA
+    answers_with: que_esta_pasando
+    empty: No hay proyectos abiertos.
+
+  que_dice_afuera:
+    label: Lo que dice el sistema que ejecuta
+    via: operator_channel
+    from: operator
+    phrase: QUE DICE
+    # Preguntado en el momento, guardado por nadie. Apuntado a un renglón,
+    # pregunta por esa tarea; apuntado a nada, pregunta por todas.
+    lists: task_manager
+    refers_to: que_hago_ahora
+    empty: No hay nada del otro lado.
+    unbound: Esta organización todavía no dijo dónde ejecuta su trabajo.
+
+  que_estoy_esperando:
+    label: ¿Qué estoy esperando?
+    via: operator_channel
+    from: operator
+    phrase: QUE ESPERO
+    answers_with: que_estoy_esperando
+    empty: No estás esperando nada.

@@ -1,0 +1,21 @@
+# =============================================================================
+# workflo.yaml — the Agency package manifest
+#
+# The first package whose operator does not talk to it over a medium the package
+# chose. It declares a ROLE — `operator_channel` — and the organization says
+# which of its connections plays it.
+#
+# There is no provider name anywhere in this repository, and a test asserts it
+# stays that way — including in the prose. A package that named a tool would be
+# a package that has to be edited when the organization changes tools, which is
+# the thing this whole arc exists to make impossible.
+# =============================================================================
+
+package: agency
+version: 0.1.0
+
+declares:
+  cases: definition/cases.yaml
+  inputs: definition/inputs.yaml
+  views: definition/views.yaml
+  configuration: definition/configuration.yaml

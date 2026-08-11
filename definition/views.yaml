@@ -1,0 +1,60 @@
+# =============================================================================
+# Las tres preguntas que un operador hace todo el día.
+#
+# Falta una cuarta — "¿qué está atrasado?" — y no está porque no se puede
+# responder honestamente todavía: atrasado necesita un plazo contra el cual
+# medir, y esta coordinación no declara ninguno. Una vista que adivinara sería
+# peor que no tenerla. Queda registrada como faltante, no fingida.
+# =============================================================================
+
+views:
+
+  que_hago_ahora:
+    label: Qué hago ahora
+    of: tarea
+    while_state: [por_hacer, en_curso]
+    show:
+      - titulo
+      - prioridad
+      - proyecto
+    order:
+      - by: prioridad
+        values: [alta, normal]
+      - by: opened_at
+        direction: asc
+
+  que_esta_pasando:
+    label: Qué está pasando
+    of: proyecto
+    while_state: [activo, en_pausa]
+    show:
+      - nombre
+      - quien_lo_pidio
+    order:
+      - by: opened_at
+        direction: desc
+
+  que_estoy_esperando:
+    label: Qué estoy esperando
+    of: tarea
+    while_state: [esperando]
+    show:
+      - titulo
+      - esperando_a
+    order:
+      - by: opened_at
+        direction: asc
+
+  no_se_entregaron:
+    label: No llegaron a la herramienta
+    of: tarea
+    while_state: [por_hacer, en_curso, esperando]
+    # Lo que Workflo coordina y el otro sistema todavía no tiene. Una entrega
+    # que se dio por perdida aparece acá; una que todavía no salió también, y
+    # eso es honesto: el trabajo está acá y no está allá.
+    show:
+      - titulo
+      - entrega
+    order:
+      - by: opened_at
+        direction: asc

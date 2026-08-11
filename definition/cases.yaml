@@ -1,0 +1,130 @@
+# =============================================================================
+# Coordination, as work the organization owns.
+#
+# Two kinds, and both are SHADOWS: they carry the state of coordinating
+# something, not the thing itself. A `tarea` here is not the task somebody does
+# — it is what this organization knows about that task: whose it is, what it is
+# waiting on, whether it still matters.
+#
+# That distinction is load-bearing and it is why there is no `descripcion` of
+# how to do anything, no checklist, no assignee workload, no estimates. Workflo
+# is not the task manager. Where a task is actually executed and stored is a
+# later slice's problem, and when it arrives it will be a hand-off over an
+# Integration — not more fields here.
+#
+# What is NOT here, deliberately: deadlines, so no "late". "Late" needs a clock
+# a Case can be measured against, and the deadline machinery exists but wiring
+# it to coordination is a decision this slice does not need to make. The view
+# that would want it is registered as missing rather than faked with a guess.
+# =============================================================================
+
+cases:
+
+  proyecto:
+    label: Proyecto
+    goal: Llevar el proyecto a algo entregado, sabiendo siempre en qué anda.
+
+    initial_state: activo
+
+    states:
+      - activo
+      - en_pausa
+      - cerrado
+
+    transitions:
+      activo: [en_pausa, cerrado]
+      en_pausa: [activo, cerrado]
+      cerrado: []
+
+    goal_states: [cerrado]
+
+    variables:
+      nombre: string
+      quien_lo_pidio: string
+      nota: string
+
+  tarea:
+    label: Tarea
+    goal: Que la tarea llegue a hecha, y que mientras tanto se sepa qué la traba.
+
+    initial_state: por_hacer
+
+    states:
+      - por_hacer
+      - en_curso
+      - esperando       # trabada por algo que no depende de nosotros
+      - hecha
+      - descartada
+
+    transitions:
+      por_hacer: [en_curso, esperando, descartada]
+      en_curso: [esperando, hecha, por_hacer, descartada]
+      esperando: [en_curso, hecha, descartada]
+      hecha: []
+      descartada: []
+
+    goal_states: [hecha]
+
+    # Trabajo que descansa acá está esperando a alguien de afuera, y el
+    # operador tiene una vista propia para eso.
+    awaits_input: [esperando]
+
+    variables:
+      titulo: string
+      proyecto: string
+      prioridad: string     # alta · normal — el orden del backlog
+      esperando_a: string
+      nota: string
+      # Lo ÚNICO que Workflo guarda de la tarea que vive afuera: un handle
+      # opaco, con quién lo emitió pegado adelante. Ni el título de allá, ni su
+      # estado, ni una copia de nada. Dos sistemas guardando el mismo dato es
+      # como uno de los dos empieza a estar equivocado.
+      referencia_externa: string
+      # Si esa entrega llegó de verdad: pending · retrying · delivered · failed.
+      # Existe porque una entrega puede fallar por razones que no tienen nada
+      # que ver con el trabajo, y un Case sin dónde anotarlo es un Case que
+      # afirma en silencio que hay trabajo externo.
+      entrega: string
+      # Lo que el otro sistema dice que pasa con esa tarea. INFORMATIVO: no
+      # mueve la coordinación. Que una tarea esté `done` allá no significa que
+      # esta organización haya decidido que está hecha.
+      standing_externo: string
+      # Cuándo lo dijo, por el reloj del proveedor y no por el de llegada.
+      ultimo_reflejo: string
+
+    # -------------------------------------------------------------------------
+    # El trabajo se entrega a quien lo ejecuta, y se lo mantiene al tanto.
+    #
+    # `to: task_manager` es un ROL. Cuál herramienta lo juega lo dice la
+    # organización, y este archivo no puede enterarse.
+    #
+    # Los estados que se le cuentan son los cinco que TODO gestor de tareas
+    # comparte: existe, alguien está en eso, algo la traba, terminó, no va. Más
+    # fino que eso sería el vocabulario de una herramienta con nombre abstracto.
+    # -------------------------------------------------------------------------
+    hands_off:
+      por_hacer:
+        to: task_manager
+        title: titulo
+        detail: nota
+        records: referencia_externa
+        records_delivery: entrega
+        records_standing: standing_externo
+        records_synced_at: ultimo_reflejo
+        failed_message: >
+          No pudimos anotar esta tarea en la herramienta donde ejecutan. Quedó
+          coordinada acá y hay que crearla a mano.
+
+    reflects:
+      en_curso:
+        to: task_manager
+        standing: in_progress
+      esperando:
+        to: task_manager
+        standing: blocked
+      hecha:
+        to: task_manager
+        standing: done
+      descartada:
+        to: task_manager
+        standing: cancelled
