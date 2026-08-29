@@ -16,6 +16,13 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.4.0 — lo que se contesta se lee, en vez de volcarse en un campo que alguien
+# eligió de antemano. La primera corrida real dio un bucle: el operador contestó
+# la fecha cuatro veces y el sistema volvió a pedirla cuatro veces, porque la
+# respuesta se archivaba como `alcance` y `plazo` seguía vacío. Y la repregunta
+# se acota a los campos declarados: preguntar por algo que no es un campo es
+# preguntar algo cuya respuesta no tiene dónde ir, y eso no termina nunca.
+#
 # 0.3.0 — la prosa entra por el mismo canal que los comandos, detrás de la
 # palabra NOTA. Un rol de canal aparte era más limpio conceptualmente y le
 # salía caro a la organización: la plataforma identifica una conexión por la
@@ -26,7 +33,7 @@
 # =============================================================================
 
 package: agency
-version: 0.3.0
+version: 0.4.0
 
 declares:
   cases: definition/cases.yaml

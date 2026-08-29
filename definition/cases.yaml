@@ -192,6 +192,10 @@ cases:
       # material sobre el que el juicio se apoya, y queda para que alguien
       # pueda ver qué entendió la plataforma antes de proponer nada.
       lectura: string
+      # Lo último que el operador contestó, tal cual. Igual que `nota_cruda`:
+      # los campos son una LECTURA de esto, y una lectura sin el original al
+      # lado no se puede revisar.
+      respuesta_del_operador: string
       pregunta_pendiente: string
       intentos_de_contacto: number
       disposicion_propuesta: string
@@ -207,10 +211,25 @@ cases:
         question: ¿Nos contás un poco más? Me quedó claro que hay algo para hacer, pero no para quién ni para cuándo.
         records: pregunta_pendiente
         reason:
+          # La instrucción acota la pregunta a los campos que este case type
+          # declara, y no por prolijidad: una pregunta sobre algo que no es un
+          # campo es una pregunta cuya respuesta no tiene dónde guardarse, y
+          # entonces no puede dejar de hacerse nunca. Preguntar «¿cuántas horas
+          # podemos dedicarle?» produjo exactamente ese bucle en la primera
+          # corrida real.
+          #
+          # Y UNA cosa, no dos: «¿la fecha exacta Y cuántos perfiles?» se
+          # contesta a medias, y lo que quedó a medias se vuelve a preguntar.
           instruction: >
-            Escribí UNA sola pregunta, breve y en español rioplatense, pidiendo
-            lo que falte para poder decidir si tomamos este trabajo. No saludes
-            y no expliques: sólo la pregunta.
+            Falta un dato para decidir si tomamos este trabajo. Mirá cuál de
+            estos está vacío o es impreciso — quién lo pide, qué hay que hacer,
+            con qué alcance, para cuándo — y pedí UNO SOLO, el más importante de
+            los que falten.
+            Preguntá únicamente por eso: no preguntes por presupuesto, por horas
+            disponibles, por quién lo va a hacer ni por nada que dependa de
+            nosotros y no de quien lo pidió.
+            Una sola oración, breve, en español rioplatense. No saludes, no
+            expliques, no agradezcas: sólo la pregunta.
           reads: [titulo, cliente, objetivo, alcance, plazo]
           max_length: 240
         then: esperando

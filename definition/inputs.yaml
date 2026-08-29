@@ -210,5 +210,31 @@ inputs:
     answers: incompleto
     advances: encargo
     to: [decidible]
+    # `rest` tiene que capturarse para que la frase sea un PREFIJO y no el
+    # mensaje entero — y va a su propia variable, no a un campo del encargo.
+    # Volcarla en `alcance` fue el bucle de la primera corrida real: una fecha
+    # contestada se archivaba como alcance, `plazo` seguía vacío, y la
+    # repregunta volvía a pedir la fecha. Cuatro veces.
     captures:
-      alcance: rest
+      respuesta_del_operador: rest
+    # La respuesta también se LEE. Es lo que hace que lo contestado aterrice en
+    # el campo que contesta, en vez de en el que alguien eligió al escribir el
+    # package.
+    extracts:
+      from: text
+      instruction: >
+        Esto es la respuesta a algo que preguntamos sobre un trabajo que nos
+        pidieron. Extraé únicamente lo que la respuesta diga de verdad: quién lo
+        pide, qué hay que hacer, con qué alcance y para cuándo. Lo que no
+        mencione, no lo inventes.
+      fields:
+        titulo: string
+        cliente: string
+        objetivo: string
+        alcance: string
+        plazo: string
+      # Sin `needs`: una respuesta que sólo trae la fecha es una buena
+      # respuesta. Exigir de nuevo el objetivo haría que toda respuesta parcial
+      # fuera ilegible, que es la manera más rápida de volver al bucle.
+      min_confidence: 0.4
+      records: lectura
