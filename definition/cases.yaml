@@ -179,6 +179,10 @@ cases:
     awaits_input: [esperando]
 
     variables:
+      # Lo que se escribió, tal cual, menos la palabra que lo abrió. Se guarda
+      # porque es la única fuente: lo demás son campos que alguien leyó de acá,
+      # y una lectura sin el original al lado no se puede revisar.
+      nota_cruda: string
       titulo: string
       cliente: string
       objetivo: string

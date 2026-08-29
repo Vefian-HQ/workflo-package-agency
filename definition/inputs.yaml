@@ -137,20 +137,26 @@ inputs:
   # ===========================================================================
   # Lo que se habló, en prosa.
   #
-  # El único input de este package que NO declara frase, y por eso el único que
-  # vive en otro rol de canal. Un opener sin frase reclama cualquier mensaje del
-  # canal donde escucha; en el de comandos competiría con TAREA y PROYECTO y
-  # cuál ganara dependería del orden en que la plataforma recorre los inputs.
-  # Dos roles resuelven eso sin que nadie tenga que acordarse de nada.
+  # Una palabra al principio y después lo que quieras. La palabra no está por
+  # gusto: un opener sin frase reclama CUALQUIER mensaje del canal, y acá
+  # competiría con TAREA y PROYECTO — cuál ganara dependería del orden en que
+  # la plataforma recorre sus inputs, que no es una promesa que nadie hizo.
+  #
+  # `captures: rest` es lo que convierte la frase en un PREFIJO en vez de en el
+  # mensaje entero: sin eso, `saysThePhrase` pide match exacto y esto sólo
+  # matchearía a alguien que escribiera «NOTA» y nada más.
   #
   # El cuerpo del mensaje ES el documento. No hay un archivo adjunto ni un
   # formulario: alguien escribe lo que se dijo y la plataforma lo lee.
   # ===========================================================================
   nota_de_trabajo:
     label: Lo que se habló
-    via: intake_channel
+    via: operator_channel
     from: operator
     opens: encargo
+    phrase: NOTA
+    captures:
+      nota_cruda: rest
     extracts:
       from: text
       instruction: >
@@ -173,7 +179,7 @@ inputs:
 
   aprobar_encargo:
     label: Aprobar un encargo
-    via: intake_channel
+    via: operator_channel
     from: operator
     phrase: APROBAR
     advances: encargo
@@ -187,7 +193,7 @@ inputs:
 
   que_propuse:
     label: ¿Qué propuse?
-    via: intake_channel
+    via: operator_channel
     from: operator
     phrase: QUE PROPUSE
     answers_with: encargos_por_aprobar
@@ -195,10 +201,14 @@ inputs:
 
   responder_lo_que_falta:
     label: La respuesta a lo que faltaba
-    via: intake_channel
+    via: operator_channel
     from: operator
+    # Con frase por lo mismo que el opener: un advancer sin frase reclamaría
+    # cualquier mensaje del operador mientras haya un encargo esperando, y se
+    # comería un TAREA.
+    phrase: COMPLETO
     answers: incompleto
     advances: encargo
     to: [decidible]
     captures:
-      alcance: text
+      alcance: rest
