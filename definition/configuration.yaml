@@ -39,3 +39,13 @@ configuration:
       The identity that user is known by on the operator channel. The platform
       already keeps this to know who is speaking; the package only needs to know
       it is them.
+
+  intake_channel:
+    type: string
+    required: true
+    description: >
+      El canal donde alguien cuenta lo que se habló, en prosa, sin comandos.
+      Separado del de comandos a propósito: un input que LEE no declara frase,
+      así que reclamaría cualquier mensaje del canal en el que escuche — y en el
+      de comandos eso competiría con TAREA y PROYECTO. Dos roles, dos preguntas,
+      y la organización contesta cuál de sus conexiones juega cada uno.

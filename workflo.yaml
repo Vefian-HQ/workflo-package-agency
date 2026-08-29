@@ -9,10 +9,16 @@
 # stays that way — including in the prose. A package that named a tool would be
 # a package that has to be edited when the organization changes tools, which is
 # the thing this whole arc exists to make impossible.
+#
+# 0.2.0 — el trabajo deja de llegar sólo como comandos. Un segundo rol de canal
+# recibe lo que se habló en prosa, la plataforma lo lee, propone qué hacer sobre
+# una lista cerrada que escribió esta organización, y una persona aprueba antes
+# de que se abra nada. Ningún proveedor nuevo, ningún nombre de herramienta, y
+# el camino de comandos que ya funcionaba queda intacto.
 # =============================================================================
 
 package: agency
-version: 0.1.0
+version: 0.2.0
 
 declares:
   cases: definition/cases.yaml

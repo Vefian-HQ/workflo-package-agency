@@ -58,3 +58,18 @@ views:
     order:
       - by: opened_at
         direction: asc
+
+  encargos_por_aprobar:
+    label: Esperando que alguien decida
+    of: encargo
+    while_state: [por_aprobar]
+    # El motivo va en la vista a propósito. Una propuesta que sólo dice qué
+    # hacer obliga a confiar; una que dice sobre qué se apoyó se puede pesar, y
+    # pesarla es exactamente lo que se le está pidiendo a la persona.
+    show:
+      - titulo
+      - disposicion_propuesta
+      - motivo_de_la_propuesta
+    order:
+      - by: opened_at
+        direction: asc

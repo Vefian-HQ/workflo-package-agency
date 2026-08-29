@@ -133,3 +133,72 @@ inputs:
     phrase: QUE ESPERO
     answers_with: que_estoy_esperando
     empty: No estás esperando nada.
+
+  # ===========================================================================
+  # Lo que se habló, en prosa.
+  #
+  # El único input de este package que NO declara frase, y por eso el único que
+  # vive en otro rol de canal. Un opener sin frase reclama cualquier mensaje del
+  # canal donde escucha; en el de comandos competiría con TAREA y PROYECTO y
+  # cuál ganara dependería del orden en que la plataforma recorre los inputs.
+  # Dos roles resuelven eso sin que nadie tenga que acordarse de nada.
+  #
+  # El cuerpo del mensaje ES el documento. No hay un archivo adjunto ni un
+  # formulario: alguien escribe lo que se dijo y la plataforma lo lee.
+  # ===========================================================================
+  nota_de_trabajo:
+    label: Lo que se habló
+    via: intake_channel
+    from: operator
+    opens: encargo
+    extracts:
+      from: text
+      instruction: >
+        Alguien de la agencia acaba de contar lo que se habló con un cliente o
+        en una reunión interna. Extraé de lo que escribió qué hay que hacer,
+        para quién, con qué alcance y para cuándo.
+      fields:
+        titulo: string
+        cliente: string
+        objetivo: string
+        alcance: string
+        plazo: string
+      # Sin qué hay que hacer no hay nada que juzgar. Lo demás se puede
+      # preguntar; esto no, porque sin eso no hay encargo.
+      needs: [objetivo]
+      min_confidence: 0.5
+      records: lectura
+      unusable: incompleto
+    acknowledge: Lo leí. Te digo qué propongo.
+
+  aprobar_encargo:
+    label: Aprobar un encargo
+    via: intake_channel
+    from: operator
+    phrase: APROBAR
+    advances: encargo
+    confirms: decidible
+    # Sin `refers_to` a propósito. Señalar una posición exige que el operador
+    # escriba un número, y `confirms` ya sabe estrechar solo: de todo el trabajo
+    # abierto, el único que una aprobación puede reclamar es el que está
+    # RETENIDO esperándola. Si hubiera dos, la plataforma no elige — que es la
+    # respuesta correcta a una frase que no dice cuál.
+    acknowledge: Aprobado. Abro la tarea.
+
+  que_propuse:
+    label: ¿Qué propuse?
+    via: intake_channel
+    from: operator
+    phrase: QUE PROPUSE
+    answers_with: encargos_por_aprobar
+    empty: No hay nada esperando que decidas.
+
+  responder_lo_que_falta:
+    label: La respuesta a lo que faltaba
+    via: intake_channel
+    from: operator
+    answers: incompleto
+    advances: encargo
+    to: [decidible]
+    captures:
+      alcance: text

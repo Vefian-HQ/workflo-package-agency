@@ -128,3 +128,148 @@ cases:
       descartada:
         to: task_manager
         standing: cancelled
+
+  # ===========================================================================
+  # Lo que alguien contó, antes de ser trabajo.
+  #
+  # Un `encargo` NO es una tarea. Es el estado de una pregunta: ¿esto que me
+  # contaron es trabajo que tomamos, es algo que hay que aclarar, o es
+  # información y nada más? Existe porque esa pregunta tiene que poder quedar
+  # abierta, ser perseguida y ser respondida por una persona — y una `tarea`
+  # que naciera directamente de una nota se iría a la herramienta de ejecución
+  # antes de que nadie la juzgara.
+  #
+  # Cuando la respuesta es que sí, ENGENDRA una tarea y termina. Dos vidas, no
+  # una: entender qué nos pidieron se acaba cuando se decide; hacerlo no empezó.
+  #
+  # Una nota, un encargo, UNA tarea. Que una reunión mencione cuatro cosas y
+  # esto abra una sola no es un descuido — `spawns` engendra una pieza de
+  # trabajo, y forzar varias sería inventar una primitiva sin evidencia. Cuando
+  # el operador vea que quería cuatro, esa será la evidencia.
+  # ===========================================================================
+  encargo:
+    label: Encargo
+    goal: Que lo que alguien contó se vuelva trabajo que avanza, o quede descartado a sabiendas.
+
+    initial_state: decidible
+
+    states:
+      - decidible
+      - incompleto      # falta algo para poder juzgarlo
+      - esperando       # se lo preguntamos y no contestaron
+      - por_aprobar     # el juicio está hecho y espera a una persona
+      - aceptado
+      - descartado
+      - sin_respuesta
+
+    transitions:
+      decidible: [incompleto, por_aprobar, aceptado, descartado]
+      incompleto: [esperando]
+      esperando: [decidible, incompleto, sin_respuesta]
+      # Cada rama del juicio tiene que poder ejecutarse DESPUÉS de que una
+      # persona la apruebe, no sólo antes. Una rama sin salida desde acá es
+      # trabajo que se aprueba y queda trabado.
+      por_aprobar: [aceptado, incompleto, descartado, decidible]
+      aceptado: []
+      descartado: []
+      sin_respuesta: []
+
+    goal_states: [aceptado, descartado]
+
+    awaits_input: [esperando]
+
+    variables:
+      titulo: string
+      cliente: string
+      objetivo: string
+      alcance: string
+      plazo: string
+      # Lo que se leyó de la nota, tal como se leyó. No es el juicio: es el
+      # material sobre el que el juicio se apoya, y queda para que alguien
+      # pueda ver qué entendió la plataforma antes de proponer nada.
+      lectura: string
+      pregunta_pendiente: string
+      intentos_de_contacto: number
+      disposicion_propuesta: string
+      motivo_de_la_propuesta: string
+
+    # -------------------------------------------------------------------------
+    # Falta algo, y preguntarlo bien es lo menos peligroso que se le puede pedir
+    # a un modelo: lo peor que puede pasar es una frase torpe, y la pregunta
+    # escrita está ahí abajo como respuesta determinista.
+    # -------------------------------------------------------------------------
+    asks:
+      incompleto:
+        question: ¿Nos contás un poco más? Me quedó claro que hay algo para hacer, pero no para quién ni para cuándo.
+        records: pregunta_pendiente
+        reason:
+          instruction: >
+            Escribí UNA sola pregunta, breve y en español rioplatense, pidiendo
+            lo que falte para poder decidir si tomamos este trabajo. No saludes
+            y no expliques: sólo la pregunta.
+          reads: [titulo, cliente, objetivo, alcance, plazo]
+          max_length: 240
+        then: esperando
+        chase:
+          after: 24h
+          attempts: 2
+          records: intentos_de_contacto
+          message: ¿Seguimos con esto? Quedó pendiente un dato para poder decidir si lo tomamos.
+          gives_up: sin_respuesta
+
+    # -------------------------------------------------------------------------
+    # El juicio, sobre una lista cerrada que escribió esta organización.
+    #
+    # `proposes` es la regla determinista, y no está de adorno: es lo que decide
+    # cuando no hay modelo, cuando la organización no paga por uno, cuando el
+    # proveedor no contesta o cuando lo que contesta no tiene la forma pedida.
+    # Aclarar es la respuesta prudente por defecto — preguntar de más cuesta una
+    # repregunta; tomar trabajo de más cuesta un compromiso.
+    # -------------------------------------------------------------------------
+    decides:
+      decidible:
+        proposes: aclarar
+        reason:
+          instruction: >
+            Sos quien decide qué hacer con algo que alguien de la agencia contó
+            después de una reunión. Leé lo que se entendió y decidí qué
+            corresponde.
+          reads: [titulo, cliente, objetivo, alcance, plazo]
+        held_in: por_aprobar
+        records: disposicion_propuesta
+        records_rationale: motivo_de_la_propuesta
+        branches:
+          encarar:
+            to: aceptado
+            governance: require_approval
+            means: Es trabajo y lo tomamos. Se abre una tarea y alguien la ejecuta.
+          aclarar:
+            to: incompleto
+            governance: allow
+            means: Puede ser trabajo, pero falta algo para poder comprometerse.
+          descartar:
+            to: descartado
+            governance: allow
+            means: Es información, no algo para hacer. No se abre nada.
+
+    # -------------------------------------------------------------------------
+    # Aceptado, empieza el trabajo. La tarea nace en `por_hacer`, donde el
+    # `hands_off` que ya existía la entrega a la herramienta que ejecuta — sin
+    # que este bloque sepa cuál es ni que exista.
+    # -------------------------------------------------------------------------
+    spawns:
+      aceptado:
+        opens: tarea
+        carries:
+          titulo: titulo
+          nota: alcance
+
+    # -------------------------------------------------------------------------
+    # Un juicio que espera a una persona no espera para siempre. A los dos días
+    # vuelve a decidirse: puede haber llegado más información, y la alternativa
+    # es una propuesta colgada que nadie mira y nada mueve.
+    # -------------------------------------------------------------------------
+    deadline:
+      por_aprobar:
+        after: 48h
+        then: decidible
