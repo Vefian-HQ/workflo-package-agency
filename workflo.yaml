@@ -16,6 +16,16 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.6.0 — el juicio ahora dice cuándo alcanza. No lo decía, y un modelo prolijo
+# lee «decidí qué corresponde» como «pedí hasta estar seguro»: la primera
+# corrida real dio vueltas de `aclarar` sobre un pedido que cualquiera hubiera
+# tomado. Un PM toma trabajo con el alcance grueso y lo precisa haciéndolo.
+#
+# 0.5.0 — rendirse también termina. `sin_respuesta` no estaba entre los estados
+# de meta, así que un encargo que la plataforma dejó de perseguir quedaba
+# ABIERTO para siempre — y seguía reclamando cada respuesta que llegaba, con lo
+# que dos encargos vivos dejaban el canal mudo sin decir por qué.
+#
 # 0.4.0 — lo que se contesta se lee, en vez de volcarse en un campo que alguien
 # eligió de antemano. La primera corrida real dio un bucle: el operador contestó
 # la fecha cuatro veces y el sistema volvió a pedirla cuatro veces, porque la
@@ -33,7 +43,7 @@
 # =============================================================================
 
 package: agency
-version: 0.4.0
+version: 0.6.0
 
 declares:
   cases: definition/cases.yaml

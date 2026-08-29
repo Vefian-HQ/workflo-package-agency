@@ -174,7 +174,14 @@ cases:
       descartado: []
       sin_respuesta: []
 
-    goal_states: [aceptado, descartado]
+    # `sin_respuesta` también termina, y por eso está acá. No es un logro —
+    # nadie consiguió nada— pero es un final: desde ahí no hay a dónde moverse.
+    # Dejarlo afuera lo mantenía ABIERTO para siempre, y un encargo abierto que
+    # ya no puede avanzar sigue compitiendo por cada comando que llega: la
+    # plataforma encuentra dos piezas de trabajo que reclaman lo mismo, no elige
+    # —con razón— y el canal se queda mudo. Un final que no cierra no es un
+    # final, es una piedra en el camino.
+    goal_states: [aceptado, descartado, sin_respuesta]
 
     awaits_input: [esperando]
 
@@ -252,11 +259,27 @@ cases:
     decides:
       decidible:
         proposes: aclarar
+        # La instrucción tiene que decir CUÁNDO ALCANZA, y no lo decía. Un
+        # modelo prolijo lee «decidí qué corresponde» como «pedí hasta estar
+        # seguro», y de un trabajo de verdad nunca se está seguro: siempre queda
+        # algo por precisar. La primera corrida real dio tres vueltas de
+        # `aclarar` sobre un pedido que cualquier persona hubiera tomado.
+        #
+        # Un PM toma trabajo con el alcance a medias y lo precisa haciéndolo.
+        # Eso no es descuido: es el oficio.
         reason:
           instruction: >
             Sos quien decide qué hacer con algo que alguien de la agencia contó
-            después de una reunión. Leé lo que se entendió y decidí qué
-            corresponde.
+            después de una reunión.
+            Elegí `encarar` si se sabe quién lo pide, qué hay que hacer y para
+            cuándo — aunque el alcance esté grueso. El detalle fino se precisa
+            trabajando, no antes de empezar, y alguien va a revisar esta
+            propuesta antes de que se abra nada.
+            Elegí `aclarar` sólo si falta algo SIN LO CUAL NO SE PUEDE EMPEZAR.
+            No pidas más precisión sobre lo que ya se entiende, y no evalúes si
+            tenemos tiempo, gente o presupuesto: eso es nuestro y no de quien
+            pidió el trabajo.
+            Elegí `descartar` si no hay nada para hacer: es información.
           reads: [titulo, cliente, objetivo, alcance, plazo]
         held_in: por_aprobar
         records: disposicion_propuesta
