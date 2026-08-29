@@ -47,7 +47,7 @@ inputs:
     acknowledge: Anotado, está en curso.
 
   retomar_tarea:
-    label: Se destrabó, la retomo
+    label: Se desbloqueó, la retomo
     via: operator_channel
     from: operator
     advances: tarea
@@ -104,7 +104,7 @@ inputs:
     from: operator
     phrase: QUE HAGO
     answers_with: que_hago_ahora
-    empty: No tenés nada pendiente.
+    empty: No tienes nada pendiente.
 
   que_esta_pasando:
     label: ¿Qué está pasando?
@@ -161,7 +161,7 @@ inputs:
       from: text
       instruction: >
         Alguien de la agencia acaba de contar lo que se habló con un cliente o
-        en una reunión interna. Extraé de lo que escribió qué hay que hacer,
+        en una reunión interna. Extrae de lo que escribió qué hay que hacer,
         para quién, con qué alcance y para cuándo.
       fields:
         titulo: string
@@ -227,7 +227,7 @@ inputs:
       from: text
       instruction: >
         Esto es la respuesta a algo que preguntamos sobre un trabajo que nos
-        pidieron. Extraé únicamente lo que la respuesta diga de verdad: quién lo
+        pidieron. Extrae únicamente lo que la respuesta diga de verdad: quién lo
         pide, qué hay que hacer, con qué alcance y para cuándo. Lo que no
         mencione, no lo inventes.
       fields:

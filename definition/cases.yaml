@@ -52,7 +52,7 @@ cases:
     states:
       - por_hacer
       - en_curso
-      - esperando       # trabada por algo que no depende de nosotros
+      - esperando       # bloqueada por algo que no depende de nosotros
       - hecha
       - descartada
 
@@ -215,7 +215,7 @@ cases:
     # -------------------------------------------------------------------------
     asks:
       incompleto:
-        question: ¿Nos contás un poco más? Me quedó claro que hay algo para hacer, pero no para quién ni para cuándo.
+        question: ¿Nos cuentas un poco más? Me quedó claro que hay algo para hacer, pero no para quién ni para cuándo.
         records: pregunta_pendiente
         reason:
           # La instrucción acota la pregunta a los campos que este case type
@@ -228,15 +228,15 @@ cases:
           # Y UNA cosa, no dos: «¿la fecha exacta Y cuántos perfiles?» se
           # contesta a medias, y lo que quedó a medias se vuelve a preguntar.
           instruction: >
-            Falta un dato para decidir si tomamos este trabajo. Mirá cuál de
+            Falta un dato para decidir si tomamos este trabajo. Revisa cuál de
             estos está vacío o es impreciso — quién lo pide, qué hay que hacer,
-            con qué alcance, para cuándo — y pedí UNO SOLO, el más importante de
+            con qué alcance, para cuándo — y pide UNO SOLO, el más importante de
             los que falten.
-            Preguntá únicamente por eso: no preguntes por presupuesto, por horas
+            Pregunta únicamente por eso: no preguntes por presupuesto, por horas
             disponibles, por quién lo va a hacer ni por nada que dependa de
             nosotros y no de quien lo pidió.
-            Una sola oración, breve, en español rioplatense. No saludes, no
-            expliques, no agradezcas: sólo la pregunta.
+            Una sola oración, breve. No saludes, no expliques, no agradezcas:
+            sólo la pregunta.
           reads: [titulo, cliente, objetivo, alcance, plazo]
           max_length: 240
         then: esperando
@@ -260,7 +260,7 @@ cases:
       decidible:
         proposes: aclarar
         # La instrucción tiene que decir CUÁNDO ALCANZA, y no lo decía. Un
-        # modelo prolijo lee «decidí qué corresponde» como «pedí hasta estar
+        # modelo prolijo lee «decide qué corresponde» como «pregunta hasta estar
         # seguro», y de un trabajo de verdad nunca se está seguro: siempre queda
         # algo por precisar. La primera corrida real dio tres vueltas de
         # `aclarar` sobre un pedido que cualquier persona hubiera tomado.
@@ -269,23 +269,23 @@ cases:
         # Eso no es descuido: es el oficio.
         reason:
           instruction: >
-            Sos quien decide qué hacer con algo que alguien de la agencia contó
-            después de una reunión.
-            Elegí `encarar` si se sabe quién lo pide, qué hay que hacer y para
-            cuándo — aunque el alcance esté grueso. El detalle fino se precisa
+            Eres quien decide qué hacer con algo que alguien de la agencia
+            contó después de una reunión.
+            Elige `aceptar` si se sabe quién lo pide, qué hay que hacer y para
+            cuándo — aunque el alcance no esté del todo definido. El detalle fino se precisa
             trabajando, no antes de empezar, y alguien va a revisar esta
             propuesta antes de que se abra nada.
-            Elegí `aclarar` sólo si falta algo SIN LO CUAL NO SE PUEDE EMPEZAR.
+            Elige `aclarar` sólo si falta algo SIN LO CUAL NO SE PUEDE EMPEZAR.
             No pidas más precisión sobre lo que ya se entiende, y no evalúes si
             tenemos tiempo, gente o presupuesto: eso es nuestro y no de quien
             pidió el trabajo.
-            Elegí `descartar` si no hay nada para hacer: es información.
+            Elige `descartar` si no hay nada para hacer: es información.
           reads: [titulo, cliente, objetivo, alcance, plazo]
         held_in: por_aprobar
         records: disposicion_propuesta
         records_rationale: motivo_de_la_propuesta
         branches:
-          encarar:
+          aceptar:
             to: aceptado
             governance: require_approval
             means: Es trabajo y lo tomamos. Se abre una tarea y alguien la ejecuta.

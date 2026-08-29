@@ -16,6 +16,17 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.9.0 — el package deja de decir en qué idioma se habla. Ni «rioplatense» ni
+# «neutro»: cómo suena una organización es de la organización, igual que qué
+# proveedor usa y qué modelo paga. La plataforma le pregunta una vez y compone
+# la respuesta en cada instrucción. Este archivo declara significado y nada más.
+#
+# 0.8.0 — todo lo que esta organización le dice a una persona pasa a español
+# neutro. Estaba en rioplatense por herencia de un fixture y por descuido de
+# quien escribió encima: voseo en los mensajes, imperativos regionales en las
+# instrucciones al modelo, y `encarar` como nombre de una rama. Un package que
+# se instala en varios países no puede hablar como si se instalara en uno.
+#
 # 0.7.0 — el vocabulario se ordena y encoge. Contestar una pregunta ya no
 # necesita palabra: la plataforma sabe que si te preguntó algo y escribís algo
 # que no es un comando, eso es la respuesta. Y APROBAR pasa a APROBADO, para que
@@ -23,7 +34,7 @@
 # orden — del otro lado hay un colega, no una CLI.
 #
 # 0.6.0 — el juicio ahora dice cuándo alcanza. No lo decía, y un modelo prolijo
-# lee «decidí qué corresponde» como «pedí hasta estar seguro»: la primera
+# lee «decide qué corresponde» como «pregunta hasta estar seguro»: la primera
 # corrida real dio vueltas de `aclarar` sobre un pedido que cualquiera hubiera
 # tomado. Un PM toma trabajo con el alcance grueso y lo precisa haciéndolo.
 #
@@ -49,7 +60,7 @@
 # =============================================================================
 
 package: agency
-version: 0.7.0
+version: 0.9.0
 
 declares:
   cases: definition/cases.yaml
