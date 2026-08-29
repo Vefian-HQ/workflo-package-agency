@@ -172,7 +172,11 @@ inputs:
       # Sin qué hay que hacer no hay nada que juzgar. Lo demás se puede
       # preguntar; esto no, porque sin eso no hay encargo.
       needs: [objetivo]
-      min_confidence: 0.5
+      # Opus vuelve conservador: en las primeras corridas reales las confianzas
+      # llegaron en 0.50, 0.55 y 0.60, una rozando el límite. Con el umbral en
+      # 0.5 cada nota era un volado — y como `needs` es todo-o-nada, un solo
+      # campo flojo descartaba los cuatro que estaban bien.
+      min_confidence: 0.3
       records: lectura
       unusable: incompleto
     acknowledge: Lo leí. Te digo qué propongo.
@@ -239,5 +243,5 @@ inputs:
       # Sin `needs`: una respuesta que sólo trae la fecha es una buena
       # respuesta. Exigir de nuevo el objetivo haría que toda respuesta parcial
       # fuera ilegible, que es la manera más rápida de volver al bucle.
-      min_confidence: 0.4
+      min_confidence: 0.3
       records: lectura

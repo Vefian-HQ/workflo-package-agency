@@ -237,7 +237,15 @@ cases:
             nosotros y no de quien lo pidió.
             Una sola oración, breve. No saludes, no expliques, no agradezcas:
             sólo la pregunta.
-          reads: [titulo, cliente, objetivo, alcance, plazo]
+          # `nota_cruda` va PRIMERO, y es la corrección que importa. Cuando la
+          # lectura falla los cinco campos quedan vacíos, así que el modelo que
+          # escribe la pregunta no tiene nada y pide lo primero que se le
+          # ocurre — le pasó a un operador que había escrito la fecha en la
+          # nota y recibió «¿cuál es la fecha límite de entrega?».
+          #
+          # No la estaba ignorando: no la podía ver. Sus palabras están en el
+          # Case y no estaban entre lo que se le mostraba.
+          reads: [nota_cruda, titulo, cliente, objetivo, alcance, plazo]
           max_length: 240
         then: esperando
         chase:
