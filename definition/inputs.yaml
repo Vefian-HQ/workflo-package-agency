@@ -181,7 +181,10 @@ inputs:
     label: Aprobar un encargo
     via: operator_channel
     from: operator
-    phrase: APROBAR
+    # Un participio, no un infinitivo: el operador REPORTA que algo pasó, no le
+    # imparte una orden a una herramienta. Es la misma forma de HECHO,
+    # EMPEZANDO y ESPERANDO, y la razón es que del otro lado hay un colega.
+    phrase: APROBADO
     advances: encargo
     confirms: decidible
     # Sin `refers_to` a propósito. Señalar una posición exige que el operador
@@ -203,20 +206,20 @@ inputs:
     label: La respuesta a lo que faltaba
     via: operator_channel
     from: operator
-    # Con frase por lo mismo que el opener: un advancer sin frase reclamaría
-    # cualquier mensaje del operador mientras haya un encargo esperando, y se
-    # comería un TAREA.
-    phrase: COMPLETO
+    # SIN frase, y es el punto. Preguntarle algo a alguien y después no aceptar
+    # lo que contesta porque no le puso una palabra adelante no es una interfaz
+    # estricta: es una maleducada. Pasó en la primera corrida real — el sistema
+    # preguntó, el operador contestó como contesta cualquiera, y no pasó nada.
+    #
+    # La plataforma sólo llega acá cuando ninguna palabra reclamó el mensaje, y
+    # sólo si hay exactamente una pregunta abierta para esta persona. Un HECHO
+    # sigue siendo un HECHO aunque haya algo esperando respuesta.
     answers: incompleto
     advances: encargo
     to: [decidible]
-    # `rest` tiene que capturarse para que la frase sea un PREFIJO y no el
-    # mensaje entero — y va a su propia variable, no a un campo del encargo.
-    # Volcarla en `alcance` fue el bucle de la primera corrida real: una fecha
-    # contestada se archivaba como alcance, `plazo` seguía vacío, y la
-    # repregunta volvía a pedir la fecha. Cuatro veces.
+    # `text`, el mensaje entero: sin frase adelante no hay «resto» que capturar.
     captures:
-      respuesta_del_operador: rest
+      respuesta_del_operador: text
     # La respuesta también se LEE. Es lo que hace que lo contestado aterrice en
     # el campo que contesta, en vez de en el que alguien eligió al escribir el
     # package.

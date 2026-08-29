@@ -16,6 +16,12 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.7.0 — el vocabulario se ordena y encoge. Contestar una pregunta ya no
+# necesita palabra: la plataforma sabe que si te preguntó algo y escribís algo
+# que no es un comando, eso es la respuesta. Y APROBAR pasa a APROBADO, para que
+# todas las palabras que mueven trabajo digan lo que PASÓ en vez de dar una
+# orden — del otro lado hay un colega, no una CLI.
+#
 # 0.6.0 — el juicio ahora dice cuándo alcanza. No lo decía, y un modelo prolijo
 # lee «decidí qué corresponde» como «pedí hasta estar seguro»: la primera
 # corrida real dio vueltas de `aclarar` sobre un pedido que cualquiera hubiera
@@ -43,7 +49,7 @@
 # =============================================================================
 
 package: agency
-version: 0.6.0
+version: 0.7.0
 
 declares:
   cases: definition/cases.yaml
