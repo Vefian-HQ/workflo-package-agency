@@ -9,12 +9,39 @@
 
 views:
 
+  # La única vista que es de UNA persona, y por eso se llama así. `mine` dice
+  # cuál de los facts de la tarea significa «de quién es»; quién pregunta lo
+  # sabe la plataforma en el momento de abrirla, y este package no puede
+  # saberlo ni tiene por qué.
+  #
+  # Consecuencia deliberada: lo que no tiene responsable no está acá. Trabajo
+  # sin dueño visible en la lista de todos como si fuera tuyo es exactamente
+  # como termina siendo de nadie. Para eso está `todo_el_trabajo`.
   que_hago_ahora:
     label: Qué hago ahora
+    of: tarea
+    mine: responsable
+    while_state: [por_hacer, en_curso]
+    show:
+      - titulo
+      - prioridad
+      - proyecto
+    order:
+      - by: prioridad
+        values: [alta, normal]
+      - by: opened_at
+        direction: asc
+
+  # Todo lo que hay para hacer, de quien sea y de nadie. Es la lista desde la
+  # que se reparte: muestra el responsable justamente porque la pregunta que se
+  # le hace es «¿esto quién lo tiene?».
+  todo_el_trabajo:
+    label: Todo lo que hay
     of: tarea
     while_state: [por_hacer, en_curso]
     show:
       - titulo
+      - responsable
       - prioridad
       - proyecto
     order:
@@ -34,9 +61,11 @@ views:
       - by: opened_at
         direction: desc
 
+  # También es tuya: se llama «estoy esperando», no «se está esperando».
   que_estoy_esperando:
     label: Qué estoy esperando
     of: tarea
+    mine: responsable
     while_state: [esperando]
     show:
       - titulo

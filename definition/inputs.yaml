@@ -31,6 +31,13 @@ inputs:
     phrase: TAREA
     captures:
       titulo: rest
+      # Quien la anota se la queda. Es lo que hace una persona cuando escribe
+      # «TAREA revisar el contrato»: no está llenando el backlog de la empresa,
+      # está anotando algo que va a hacer. Si es de otro, ASIGNO la mueve.
+      #
+      # Lo que nace de un encargo NO pasa por acá y queda sin dueño, que también
+      # es correcto: ahí nadie decidió todavía de quién es.
+      responsable: me
     sets:
       prioridad: normal
     acknowledge: Tarea anotada.
@@ -86,6 +93,40 @@ inputs:
     to: [hecha]
     acknowledge: Hecha.
 
+  # -------------------------------------------------------------------------
+  # Repartir el trabajo. Las dos únicas palabras que escriben un responsable, y
+  # las dos apuntan a `todo_el_trabajo`: se toma y se reparte de la lista de
+  # todos, no de la propia — de la propia ya es tuyo.
+  #
+  # El puntero va AL FINAL, como en toda palabra que lleva texto: «ASIGNO
+  # @laura 2» y no «ASIGNO 2 @laura». La mención puede ir en cualquier lado
+  # porque no se parsea: la plataforma busca si la dirección de alguien está en
+  # lo que escribiste.
+  # -------------------------------------------------------------------------
+  tomar_tarea:
+    label: Tomo esta tarea
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso, esperando]
+    phrase: TOMO
+    refers_to: todo_el_trabajo
+    captures:
+      responsable: me
+    acknowledge: Anotado, queda tuya.
+
+  asignar_tarea:
+    label: Asigno esta tarea a alguien
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso, esperando]
+    phrase: ASIGNO
+    refers_to: todo_el_trabajo
+    captures:
+      responsable: mentioned
+    acknowledge: Anotado, queda de esa persona.
+
   priorizar_tarea:
     label: Priorizar una tarea
     via: operator_channel
@@ -93,7 +134,7 @@ inputs:
     advances: tarea
     when_state: [por_hacer, en_curso]
     phrase: URGENTE
-    refers_to: que_hago_ahora
+    refers_to: todo_el_trabajo
     sets:
       prioridad: alta
     acknowledge: Listo, queda arriba.
@@ -104,7 +145,20 @@ inputs:
     from: operator
     phrase: QUE HAGO
     answers_with: que_hago_ahora
-    empty: No tienes nada pendiente.
+    # Decir «nada» y callarse es correcto y sirve para nada: quien recién
+    # empieza no tiene nada tomado, y la lista vacía es idéntica a la de quien
+    # ya terminó todo.
+    empty: No tienes nada tomado. Escribe QUE HAY para ver todo el trabajo, y TOMO seguido del número para quedarte con una.
+
+  # La lista de todos, que es desde donde se reparte. Existe porque QUE HAGO
+  # dejó de ser «todo»: sin esta, el trabajo sin dueño no lo vería nadie.
+  que_hay:
+    label: ¿Qué hay para hacer?
+    via: operator_channel
+    from: operator
+    phrase: QUE HAY
+    answers_with: todo_el_trabajo
+    empty: No hay trabajo abierto.
 
   que_esta_pasando:
     label: ¿Qué está pasando?

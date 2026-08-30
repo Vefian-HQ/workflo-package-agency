@@ -73,6 +73,11 @@ cases:
       titulo: string
       proyecto: string
       prioridad: string     # alta · normal — el orden del backlog
+      # De quién es esta tarea. Guarda la clave de la persona en la plataforma,
+      # no su nombre: dos personas contestan al mismo nombre y una persona se
+      # escribe de cuatro formas, y una lista que pregunta «¿es mía?» no puede
+      # apoyarse en eso. Lo que se muestra es el nombre; lo que se guarda, no.
+      responsable: string
       esperando_a: string
       nota: string
       # Lo ÚNICO que Workflo guarda de la tarea que vive afuera: un handle
