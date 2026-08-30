@@ -16,6 +16,11 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.11.0 — un juicio retenido se anuncia. El acuse prometía «te digo qué
+# propongo» y el package no declaraba nada al retener: leía, juzgaba y esperaba
+# a una persona que no tenía cómo enterarse. Cuatro versiones funcionando en
+# silencio.
+#
 # 0.10.0 — la repregunta ve lo que la persona escribió. Cuando una lectura
 # falla los campos quedan vacíos y quien escribe la pregunta se queda sin nada,
 # así que pedía cosas que estaban a la vista en la nota. Ahora lee también la
@@ -67,7 +72,7 @@
 # =============================================================================
 
 package: agency
-version: 0.10.0
+version: 0.11.0
 
 declares:
   cases: definition/cases.yaml

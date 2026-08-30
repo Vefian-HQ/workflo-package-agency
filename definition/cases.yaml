@@ -307,6 +307,26 @@ cases:
             means: Es información, no algo para hacer. No se abre nada.
 
     # -------------------------------------------------------------------------
+    # Un juicio retenido tiene que ANUNCIARSE.
+    #
+    # El acuse promete «te digo qué propongo» y durante cuatro versiones el
+    # package no declaró nada acá: el sistema leía, juzgaba, retenía la
+    # propuesta correctamente — y la persona no tenía cómo enterarse salvo
+    # preguntando. Un juicio que espera a alguien que no sabe que lo esperan no
+    # espera: se queda.
+    #
+    # El aviso señala y no lleva: `message` es texto fijo, así que no puede
+    # decir QUÉ se propuso ni por qué. Eso se lee con QUE PROPUSE, que muestra
+    # la propuesta con lo que significa y el motivo — que es lo que hay que
+    # pesar antes de soltar nada.
+    # -------------------------------------------------------------------------
+    notify:
+      por_aprobar:
+        message: >-
+          Tengo una propuesta para esto y está esperando que alguien decida.
+          Escribe QUE PROPUSE para verla, o APROBADO para soltarla.
+
+    # -------------------------------------------------------------------------
     # Aceptado, empieza el trabajo. La tarea nace en `por_hacer`, donde el
     # `hands_off` que ya existía la entrega a la herramienta que ejecuta — sin
     # que este bloque sepa cuál es ni que exista.
