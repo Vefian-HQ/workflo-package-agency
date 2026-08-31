@@ -129,8 +129,17 @@ cases:
         priority:
           from: prioridad
           means:
-            alta: high
-            normal: normal
+            # `alta` es la ÚNICA elevación que este vocabulario tiene, y la
+            # palabra que la persona escribe es URGENTE. En los grados
+            # compartidos eso es `urgent`, no `high`: significa que se salta la
+            # fila, no que está un escalón arriba.
+            alta: urgent
+            # `normal` no se traduce a propósito. En este package quiere decir
+            # «no es urgente», que no es lo mismo que «prioridad media»: si toda
+            # tarea saliera con un grado medio, el tablero de la herramienta
+            # diría lo mismo de todo y esta organización estaría afirmando algo
+            # que nunca dijo. Una palabra sin traducir es «no hay nada que decir
+            # sobre cuánto importa», que es una respuesta de verdad.
         records: referencia_externa
         records_delivery: entrega
         records_assignment: asignacion_externa

@@ -16,10 +16,17 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.14.1 — `normal` deja de traducirse. Toda tarea llegaba a la herramienta
+# leyendo «Medium», que es peor que sin prioridad: es una afirmación que esta
+# organización nunca hizo, repetida en todo. Y `alta` pasa a `urgent`, que es lo
+# que la persona quiso decir al escribir URGENTE: se salta la fila.
+#
 # 0.14.0 — la prioridad también viaja. URGENTE dejaba la tarea arriba acá y sin
 # grado del otro lado, así que allá el backlog estaba ordenado por nada. Las
 # palabras de esta organización —alta, normal— se traducen a los grados que todo
 # gestor comparte; qué número usa cada herramienta no es asunto de este archivo.
+# `normal` no se traduce: quiere decir «no es urgente», y mandar un grado medio
+# por toda tarea haría que el tablero dijera lo mismo de todo.
 #
 # 0.13.0 — el responsable viaja a la herramienta. Una tarea nace allá a nombre
 # de quien la anotó, y ASIGNO mueve también al responsable del otro lado. Si esa persona no
@@ -97,7 +104,7 @@
 # =============================================================================
 
 package: agency
-version: 0.14.0
+version: 0.14.1
 
 declares:
   cases: definition/cases.yaml
