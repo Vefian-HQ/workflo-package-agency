@@ -90,6 +90,11 @@ cases:
       # que ver con el trabajo, y un Case sin dónde anotarlo es un Case que
       # afirma en silencio que hay trabajo externo.
       entrega: string
+      # Si el responsable llegó a la herramienta, o por qué no. Es distinto de
+      # `entrega`: una tarea puede haber llegado perfecto y su dueño no, que es
+      # lo que pasa la primera vez que se le da trabajo a alguien que todavía no
+      # tiene cuenta ahí.
+      asignacion_externa: string
       # Lo que el otro sistema dice que pasa con esa tarea. INFORMATIVO: no
       # mueve la coordinación. Que una tarea esté `done` allá no significa que
       # esta organización haya decidido que está hecha.
@@ -112,8 +117,17 @@ cases:
         to: task_manager
         title: titulo
         detail: nota
+        # De quién es, dicho con un fact PROPIO. La plataforma lo convierte en
+        # una persona y cada herramienta traduce eso a lo suyo: este package no
+        # sabe ni tiene por qué saber qué es un usuario de la herramienta que
+        # esta organización eligió.
+        assignee: responsable
         records: referencia_externa
         records_delivery: entrega
+        records_assignment: asignacion_externa
+        unassigned_message: >-
+          La anoté en la herramienta, pero sin responsable: esa persona no tiene
+          cuenta ahí. Acá sigue siendo suya.
         records_standing: standing_externo
         records_synced_at: ultimo_reflejo
         failed_message: >

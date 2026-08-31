@@ -16,6 +16,16 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.13.0 — el responsable viaja a la herramienta. Una tarea nace allá a nombre
+# de quien la anotó, y ASIGNO mueve también al responsable del otro lado. Si esa persona no
+# tiene cuenta en la herramienta, la tarea se crea igual sin responsable, queda
+# registrado en `asignacion_externa` y se dice — nunca se le asigna a otro.
+#
+# 0.12.1 — ASIGNO deja de mentir. Mencionar a alguien que la organización no
+# tiene vinculado contestaba «queda de esa persona» y no asignaba nada: la
+# captura no resolvía, un fact vacío no se escribe, y el acuse salía igual.
+# Ahora no hace nada y lo dice.
+#
 # 0.12.0 — el trabajo tiene dueño. Hasta acá el área era colega de UNA persona:
 # «qué hago» devolvía el backlog de la organización entera, porque no había a
 # quién asignarle nada. Ahora una tarea guarda a su responsable, se toma con
@@ -82,7 +92,7 @@
 # =============================================================================
 
 package: agency
-version: 0.12.0
+version: 0.13.0
 
 declares:
   cases: definition/cases.yaml

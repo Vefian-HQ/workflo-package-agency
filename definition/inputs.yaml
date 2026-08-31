@@ -126,6 +126,13 @@ inputs:
     captures:
       responsable: mentioned
     acknowledge: Anotado, queda de esa persona.
+    # Lo que pasa la primera vez que alguien menciona a un colega nuevo, que es
+    # la mitad de las veces. Sin esto el área contestaba «queda de esa persona»
+    # y la tarea conservaba el dueño que tenía: cada capa hacía lo correcto y a
+    # la persona se le decía lo contrario de lo que pasó.
+    unknown: >-
+      No sé quién es esa persona. Tiene que estar dada de alta en Workflo y
+      vinculada a su cuenta de este canal para poder pasarle trabajo.
 
   priorizar_tarea:
     label: Priorizar una tarea
