@@ -16,6 +16,11 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.14.0 — la prioridad también viaja. URGENTE dejaba la tarea arriba acá y sin
+# grado del otro lado, así que allá el backlog estaba ordenado por nada. Las
+# palabras de esta organización —alta, normal— se traducen a los grados que todo
+# gestor comparte; qué número usa cada herramienta no es asunto de este archivo.
+#
 # 0.13.0 — el responsable viaja a la herramienta. Una tarea nace allá a nombre
 # de quien la anotó, y ASIGNO mueve también al responsable del otro lado. Si esa persona no
 # tiene cuenta en la herramienta, la tarea se crea igual sin responsable, queda
@@ -92,7 +97,7 @@
 # =============================================================================
 
 package: agency
-version: 0.13.0
+version: 0.14.0
 
 declares:
   cases: definition/cases.yaml

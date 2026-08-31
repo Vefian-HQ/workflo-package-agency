@@ -122,6 +122,15 @@ cases:
         # sabe ni tiene por qué saber qué es un usuario de la herramienta que
         # esta organización eligió.
         assignee: responsable
+        # Cuánto importa, traducido. `alta` y `normal` son palabras de esta
+        # organización: la herramienta no las entiende y las guardaría como
+        # texto que no puede ordenar. Acá se dice qué significan en los grados
+        # que todo gestor comparte, igual que `reflects` hace con los estados.
+        priority:
+          from: prioridad
+          means:
+            alta: high
+            normal: normal
         records: referencia_externa
         records_delivery: entrega
         records_assignment: asignacion_externa
