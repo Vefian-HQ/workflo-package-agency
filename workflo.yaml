@@ -16,6 +16,15 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.15.0 — sin número, el comando se refiere a lo que el mensaje acaba de abrir.
+# «TAREA …» seguido de «URGENTE 1» subía la tarea MÁS VIEJA del tablero, porque
+# la línea 1 de una lista ordenada por antigüedad es la más vieja — y quien
+# escribió no había visto ninguna lista. Ahora «URGENTE» a secas quiere decir
+# «esa», y un número sigue significando un número.
+#
+# Y un señalamiento que no alcanza deja de ser silencio: cada comando que apunta
+# a una lista dice qué contestar cuando no encuentra nada.
+#
 # 0.14.1 — `normal` deja de traducirse. Toda tarea llegaba a la herramienta
 # leyendo «Medium», que es peor que sin prioridad: es una afirmación que esta
 # organización nunca hizo, repetida en todo. Y `alta` pasa a `urgent`, que es lo
@@ -104,7 +113,7 @@
 # =============================================================================
 
 package: agency
-version: 0.14.1
+version: 0.15.0
 
 declares:
   cases: definition/cases.yaml

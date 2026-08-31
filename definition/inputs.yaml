@@ -50,6 +50,9 @@ inputs:
     when_state: [por_hacer]
     phrase: EMPEZANDO
     refers_to: que_hago_ahora
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     to: [en_curso]
     acknowledge: Anotado, está en curso.
 
@@ -64,6 +67,9 @@ inputs:
     # esto son los de lo que estaba esperando. Un comando numera contra la lista
     # en la que el trabajo del que habla realmente aparece.
     refers_to: que_estoy_esperando
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     to: [en_curso]
     acknowledge: Anotado, vuelve a estar en curso.
 
@@ -75,6 +81,9 @@ inputs:
     when_state: [por_hacer, en_curso]
     phrase: ESPERANDO
     refers_to: que_hago_ahora
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     captures:
       esperando_a: rest
     to: [esperando]
@@ -90,6 +99,9 @@ inputs:
     when_state: [en_curso]
     phrase: HECHO
     refers_to: que_hago_ahora
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     to: [hecha]
     acknowledge: Hecha.
 
@@ -111,6 +123,9 @@ inputs:
     when_state: [por_hacer, en_curso, esperando]
     phrase: TOMO
     refers_to: todo_el_trabajo
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     captures:
       responsable: me
     acknowledge: Anotado, queda tuya.
@@ -123,6 +138,9 @@ inputs:
     when_state: [por_hacer, en_curso, esperando]
     phrase: ASIGNO
     refers_to: todo_el_trabajo
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     captures:
       responsable: mentioned
     acknowledge: Anotado, queda de esa persona.
@@ -142,6 +160,9 @@ inputs:
     when_state: [por_hacer, en_curso]
     phrase: URGENTE
     refers_to: todo_el_trabajo
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     sets:
       prioridad: alta
     acknowledge: Listo, queda arriba.
@@ -184,6 +205,9 @@ inputs:
     # pregunta por esa tarea; apuntado a nada, pregunta por todas.
     lists: task_manager
     refers_to: que_hago_ahora
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
     empty: No hay nada del otro lado.
     unbound: Esta organización todavía no dijo dónde ejecuta su trabajo.
 
