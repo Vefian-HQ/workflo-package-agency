@@ -73,6 +73,14 @@ cases:
       titulo: string
       proyecto: string
       prioridad: string     # alta · normal — el orden del backlog
+      # Para cuándo es, en día concreto: AAAA-MM-DD. Es lo único que una
+      # herramienta puede recibir.
+      vence: string
+      # Lo que la persona dijo, tal cual: «el viernes», «fin de mes». Se guarda
+      # además de la fecha porque es lo que dijo, y porque si la lectura sale
+      # mal es lo único contra lo que se puede comprobar.
+      plazo_dicho: string
+      lectura_de_fecha: string
       # De quién es esta tarea. Guarda la clave de la persona en la plataforma,
       # no su nombre: dos personas contestan al mismo nombre y una persona se
       # escribe de cuatro formas, y una lista que pregunta «¿es mía?» no puede
@@ -122,6 +130,7 @@ cases:
         # sabe ni tiene por qué saber qué es un usuario de la herramienta que
         # esta organización eligió.
         assignee: responsable
+        due: vence
         # Cuánto importa, traducido. `alta` y `normal` son palabras de esta
         # organización: la herramienta no las entiende y las guardaría como
         # texto que no puede ordenar. Acá se dice qué significan en los grados
@@ -232,6 +241,9 @@ cases:
       objetivo: string
       alcance: string
       plazo: string
+      # La misma fecha resuelta a un día concreto, para que la tarea que nazca
+      # de esto la reciba.
+      vence: string
       # Lo que se leyó de la nota, tal como se leyó. No es el juicio: es el
       # material sobre el que el juicio se apoya, y queda para que alguien
       # pueda ver qué entendió la plataforma antes de proponer nada.
@@ -374,6 +386,11 @@ cases:
         carries:
           titulo: titulo
           nota: alcance
+          # La fecha que la nota ya traía deja de perderse. La extracción la
+          # resolvió a un día concreto cuando se leyó la reunión; hasta ahora
+          # ese dato moría en el encargo y la tarea nacía sin plazo.
+          vence: vence
+          plazo_dicho: plazo
 
     # -------------------------------------------------------------------------
     # Un juicio que espera a una persona no espera para siempre. A los dos días

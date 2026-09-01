@@ -152,6 +152,42 @@ inputs:
       No sé quién es esa persona. Tiene que estar dada de alta en Workflo y
       vinculada a su cuenta de este canal para poder pasarle trabajo.
 
+  # -------------------------------------------------------------------------
+  # La fecha, dicha como la dice una persona.
+  #
+  # Se lee con el mismo arco que el juicio, y hace ECO en vez de pedir
+  # aprobación: retener una tarea para que alguien confirme «viernes» sería
+  # pesado para algo que se dice diez veces por día, y el eco te muestra lo
+  # entendido en el mismo segundo. Si leyó mal, lo escribes de nuevo.
+  # -------------------------------------------------------------------------
+  fechar_tarea:
+    label: Esto es para tal día
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso, esperando]
+    phrase: PARA
+    refers_to: todo_el_trabajo
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
+    captures:
+      plazo_dicho: rest
+    extracts:
+      from: rest
+      instruction: >
+        Alguien dijo para cuándo es un trabajo. Resuélvelo a un día concreto en
+        formato AAAA-MM-DD, usando el dato `hoy` para saber contra qué día
+        resolver «el viernes», «mañana» o «fin de mes».
+        Si lo que dijeron no permite fijar un día, deja el campo vacío: una
+        fecha inventada es peor que ninguna.
+      fields:
+        vence: string
+      needs: [vence]
+      min_confidence: 0.3
+      records: lectura_de_fecha
+    acknowledge: Anotado, vence el {vence}.
+
   priorizar_tarea:
     label: Priorizar una tarea
     via: operator_channel
@@ -248,12 +284,22 @@ inputs:
         Alguien de la agencia acaba de contar lo que se habló con un cliente o
         en una reunión interna. Extrae de lo que escribió qué hay que hacer,
         para quién, con qué alcance y para cuándo.
+        En `vence` pon esa misma fecha resuelta a un día concreto en formato
+        AAAA-MM-DD, usando el dato `hoy` para saber contra qué día resolverla.
+        Si lo que dijeron no permite fijar un día —«más adelante», «cuando se
+        pueda»— deja `vence` vacío: una fecha inventada es peor que ninguna.
       fields:
         titulo: string
         cliente: string
         objetivo: string
         alcance: string
         plazo: string
+        # La misma fecha, resuelta. `plazo` guarda lo que la persona dijo —
+        # «fin de mes», «el viernes»— porque eso es lo que dijo; `vence` es el
+        # día concreto, que es lo único que una herramienta puede recibir. La
+        # plataforma le pasa a cada lectura qué día es hoy donde trabaja esta
+        # organización, así que «el viernes» tiene contra qué resolverse.
+        vence: string
       # Sin qué hay que hacer no hay nada que juzgar. Lo demás se puede
       # preguntar; esto no, porque sin eso no hay encargo.
       needs: [objetivo]
@@ -317,7 +363,9 @@ inputs:
       instruction: >
         Esto es la respuesta a algo que preguntamos sobre un trabajo que nos
         pidieron. Extrae únicamente lo que la respuesta diga de verdad: quién lo
-        pide, qué hay que hacer, con qué alcance y para cuándo. Lo que no
+        pide, qué hay que hacer, con qué alcance y para cuándo. En `vence` pon
+        esa fecha resuelta a un día concreto en formato AAAA-MM-DD usando el
+        dato `hoy`; si no alcanza para fijar un día, déjalo vacío. Lo que no
         mencione, no lo inventes.
       fields:
         titulo: string
@@ -325,6 +373,12 @@ inputs:
         objetivo: string
         alcance: string
         plazo: string
+        # La misma fecha, resuelta. `plazo` guarda lo que la persona dijo —
+        # «fin de mes», «el viernes»— porque eso es lo que dijo; `vence` es el
+        # día concreto, que es lo único que una herramienta puede recibir. La
+        # plataforma le pasa a cada lectura qué día es hoy donde trabaja esta
+        # organización, así que «el viernes» tiene contra qué resolverse.
+        vence: string
       # Sin `needs`: una respuesta que sólo trae la fecha es una buena
       # respuesta. Exigir de nuevo el objetivo haría que toda respuesta parcial
       # fuera ilegible, que es la manera más rápida de volver al bucle.

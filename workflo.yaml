@@ -16,6 +16,15 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.16.0 — las fechas. PARA dice para cuándo es algo, con las palabras de una
+# persona —«el viernes», «fin de mes»— y el área contesta con el día que
+# entendió, para que se pueda corregir en el acto. La fecha viaja a la
+# herramienta y deja de perderse cuando una nota se acepta: la reunión ya la
+# decía y hasta ahora moría en el encargo.
+#
+# Es opcional y no se inventa: si lo que dijeron no permite fijar un día, la
+# tarea existe sin fecha y se toma cuando haya espacio.
+#
 # 0.15.0 — sin número, el comando se refiere a lo que el mensaje acaba de abrir.
 # «TAREA …» seguido de «URGENTE 1» subía la tarea MÁS VIEJA del tablero, porque
 # la línea 1 de una lista ordenada por antigüedad es la más vieja — y quien
@@ -113,7 +122,7 @@
 # =============================================================================
 
 package: agency
-version: 0.15.0
+version: 0.16.0
 
 declares:
   cases: definition/cases.yaml
