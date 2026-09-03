@@ -16,6 +16,15 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.17.0 — cuando la herramienta no contesta, se dice. QUE DICE le pregunta al
+# sistema que ejecuta, y esa pregunta puede quedar sin respuesta por motivos que
+# no son de nadie de acá: un token que venció, una caída, un límite de uso. Hasta
+# ahora eso salía por el mismo camino que «no hay nada del otro lado» —o, peor,
+# por ninguno— y las dos cosas son opuestas: una es una respuesta y la otra es no
+# tener respuesta. Ahora este archivo dice qué contestar cuando no se pudo
+# preguntar, porque cómo suena esta organización cuando algo falla es de esta
+# organización.
+#
 # 0.16.0 — las fechas. PARA dice para cuándo es algo, con las palabras de una
 # persona —«el viernes», «fin de mes»— y el área contesta con el día que
 # entendió, para que se pueda corregir en el acto. La fecha viaja a la
@@ -122,7 +131,7 @@
 # =============================================================================
 
 package: agency
-version: 0.16.0
+version: 0.17.0
 
 declares:
   cases: definition/cases.yaml

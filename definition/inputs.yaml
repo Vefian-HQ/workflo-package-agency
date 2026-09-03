@@ -246,6 +246,12 @@ inputs:
       corchetes.
     empty: No hay nada del otro lado.
     unbound: Esta organización todavía no dijo dónde ejecuta su trabajo.
+    # Preguntar y no obtener respuesta no es que no haya nada: es no saber.
+    # Contestar `empty` ahí sería decir «del otro lado no hay nada» sobre una
+    # pregunta que nadie respondió, y quien lee eso deja de buscar.
+    unreachable: >-
+      No pude preguntarle a la herramienta: no contestó. Intenta de nuevo en
+      un momento.
 
   que_estoy_esperando:
     label: ¿Qué estoy esperando?
