@@ -204,18 +204,27 @@ cases:
       - incompleto      # falta algo para poder juzgarlo
       - esperando       # se lo preguntamos y no contestaron
       - por_aprobar     # el juicio está hecho y espera a una persona
+      # Esperando a otra área de esta organización. NO está en `awaits_input`:
+      # eso es para trabajo trabado en alguien de AFUERA, y confundir las dos
+      # cosas borra la única distinción que ese bloque existe para hacer.
+      - esperando_presupuesto
+      # El número llegó. El encargo sigue abierto porque todavía no es ni
+      # trabajo que avanza ni algo descartado a sabiendas — que es su meta.
+      - presupuestado
       - aceptado
       - descartado
       - sin_respuesta
 
     transitions:
-      decidible: [incompleto, por_aprobar, aceptado, descartado]
+      decidible: [incompleto, por_aprobar, aceptado, descartado, esperando_presupuesto]
       incompleto: [esperando]
       esperando: [decidible, incompleto, sin_respuesta]
       # Cada rama del juicio tiene que poder ejecutarse DESPUÉS de que una
       # persona la apruebe, no sólo antes. Una rama sin salida desde acá es
       # trabajo que se aprueba y queda trabado.
-      por_aprobar: [aceptado, incompleto, descartado, decidible]
+      por_aprobar: [aceptado, incompleto, descartado, decidible, esperando_presupuesto]
+      esperando_presupuesto: [presupuestado, descartado]
+      presupuestado: [aceptado, descartado]
       aceptado: []
       descartado: []
       sin_respuesta: []
@@ -256,6 +265,13 @@ cases:
       intentos_de_contacto: number
       disposicion_propuesta: string
       motivo_de_la_propuesta: string
+      # Lo que volvió del presupuesto. Cuatro hechos y no un documento: lo que
+      # esta organización necesita saber para seguir es cuánto, en qué, hasta
+      # cuándo y por qué. Un PDF es otra conversación y todavía no la tuvimos.
+      presupuesto_monto: number
+      presupuesto_moneda: string
+      presupuesto_validez: string
+      presupuesto_resumen: string
 
     # -------------------------------------------------------------------------
     # Falta algo, y preguntarlo bien es lo menos peligroso que se le puede pedir
@@ -336,6 +352,10 @@ cases:
             No pidas más precisión sobre lo que ya se entiende, y no evalúes si
             tenemos tiempo, gente o presupuesto: eso es nuestro y no de quien
             pidió el trabajo.
+            Elige `cotizar` si hay trabajo pero antes hay que ponerle precio:
+            alguien pidió un presupuesto, o el compromiso depende de cuánto
+            sale. Pedir un precio no compromete nada — lo que se aprueba
+            después es la cotización.
             Elige `descartar` si no hay nada para hacer: es información.
           reads: [titulo, cliente, objetivo, alcance, plazo]
         held_in: por_aprobar
@@ -346,6 +366,15 @@ cases:
             to: aceptado
             governance: require_approval
             means: Es trabajo y lo tomamos. Se abre una tarea y alguien la ejecuta.
+          # Pedir el precio no compromete a esta organización con nadie, así
+          # que no espera a una persona: lo que sí espera es la cotización que
+          # salga de acá, y eso se aprueba en el presupuesto y no en el encargo.
+          # Una aprobación por cada paso del mismo compromiso es una aprobación
+          # que nadie lee.
+          cotizar:
+            to: esperando_presupuesto
+            governance: allow
+            means: Hay trabajo, pero antes hay que ponerle precio. Se pide un presupuesto y el encargo espera.
           aclarar:
             to: incompleto
             governance: allow
@@ -374,6 +403,21 @@ cases:
         message: >-
           Tengo una propuesta para esto y está esperando que alguien decida.
           Escribe QUE PROPUSE para verla, o APROBADO para soltarla.
+      # Esperar a otra área no puede ser en silencio. El acuse de la nota
+      # promete «te digo qué propongo», y sin esto la propuesta era abrir un
+      # presupuesto que nadie sabía que existía: el trabajo quedaba esperando
+      # una acción de una persona a la que nadie se la pidió.
+      esperando_presupuesto:
+        message: >-
+          Esto necesita precio antes de comprometernos, así que abrí un
+          presupuesto. Escribe COTIZO seguido de cuánto sale.
+      # Volvió el número. El aviso señala y no lleva —`message` es texto fijo,
+      # igual que el de arriba— así que dice que llegó, no cuánto. Quien cotizó
+      # ya vio el monto en el acuse de su propio COTIZO.
+      presupuestado:
+        message: >-
+          Ya tengo el presupuesto de este encargo. Quedó anotado con el monto,
+          la moneda y hasta cuándo vale.
 
     # -------------------------------------------------------------------------
     # Aceptado, empieza el trabajo. La tarea nace en `por_hacer`, donde el
@@ -381,6 +425,16 @@ cases:
     # que este bloque sepa cuál es ni que exista.
     # -------------------------------------------------------------------------
     spawns:
+      # Ponerle precio a algo es trabajo con su propia meta, su propio juicio y
+      # su propia aprobación — no un estado del encargo. Por eso nace como
+      # trabajo aparte y el encargo espera, en vez de que el encargo intente ser
+      # dos cosas a la vez.
+      esperando_presupuesto:
+        opens: presupuesto
+        carries:
+          titulo: titulo
+          cliente: cliente
+          pedido: alcance
       aceptado:
         opens: tarea
         carries:
@@ -401,3 +455,134 @@ cases:
       por_aprobar:
         after: 48h
         then: decidible
+
+  # ===========================================================================
+  # PRESUPUESTO — ponerle precio a algo que se pidió.
+  #
+  # Nace de un encargo que no se puede tomar sin saber cuánto sale, y termina
+  # devolviéndole el número a ese mismo encargo. Entre una cosa y la otra tiene
+  # su propia meta, su propio juicio y su propia aprobación, que es exactamente
+  # por qué es trabajo aparte y no un estado del encargo: dos piezas de trabajo
+  # con metas distintas no son una que cambia de idea.
+  #
+  # ## Cuatro hechos, no un documento
+  #
+  # Cuánto, en qué moneda, hasta cuándo vale y qué incluye. Eso es lo que esta
+  # organización necesita saber para seguir. Un PDF, líneas de detalle, impuestos
+  # o un catálogo son otra conversación y todavía nadie la pidió — y el día que
+  # se pida, se pide sobre esto, no en lugar de esto.
+  # ===========================================================================
+  presupuesto:
+    label: Presupuesto
+    goal: Ponerle un número a lo que se pidió, y que quien lo pidió lo tenga.
+
+    initial_state: por_cotizar
+
+    states:
+      - por_cotizar     # nació, y nadie le puso número todavía
+      - decidible       # ya tiene número: se puede juzgar si responde al pedido
+      - por_aprobar     # el juicio está hecho y espera a una persona
+      - aprobado
+      - descartado
+
+    transitions:
+      por_cotizar: [decidible, descartado]
+      decidible: [por_aprobar, aprobado, descartado, por_cotizar]
+      # Cada rama del juicio tiene que poder ejecutarse DESPUÉS de que alguien
+      # la apruebe, no sólo antes. La misma regla que el encargo, por la misma
+      # razón: una rama sin salida desde acá es trabajo que se aprueba y queda
+      # trabado.
+      por_aprobar: [aprobado, descartado, por_cotizar, decidible]
+      aprobado: []
+      descartado: []
+
+    goal_states: [aprobado, descartado]
+
+    variables:
+      # Lo que el encargo pidió, para que quien cotiza no tenga que ir a
+      # buscarlo. Copiado al nacer, no consultado después: el presupuesto
+      # cotiza lo que se le pidió, aunque el encargo cambie mientras tanto.
+      titulo: string
+      cliente: string
+      pedido: string
+      # Lo que alguien escribió al cotizar, tal cual. Los cuatro de abajo son
+      # una LECTURA de esto, y una lectura sin el original al lado no se puede
+      # revisar.
+      cotizacion_cruda: string
+      lectura_de_la_cotizacion: string
+      # Cuánto sale. Un número de verdad: un monto guardado como texto no se
+      # puede sumar, ordenar ni comparar, y el día que alguien quiera saber
+      # cuánto cotizó este mes ya sería tarde para arreglarlo.
+      monto: number
+      moneda: string
+      validez: string
+      resumen: string
+      disposicion_propuesta: string
+      motivo_de_la_propuesta: string
+
+    # -------------------------------------------------------------------------
+    # El juicio: ¿este número responde a lo que se pidió?
+    #
+    # Sobre una lista cerrada, con la misma forma que el juicio del encargo — y
+    # `proposes` es la regla determinista para cuando no hay modelo, no hay
+    # presupuesto de razonamiento o el proveedor no contesta. Sostener es lo
+    # prudente por defecto: quien puso el número lo puso mirando el pedido, y
+    # una persona lo aprueba después.
+    # -------------------------------------------------------------------------
+    decides:
+      decidible:
+        proposes: sostener
+        reason:
+          instruction: >
+            Alguien de la agencia le puso precio a un trabajo que un cliente
+            pidió. Decide qué corresponde hacer con esa cotización.
+            Elige `sostener` si el número, la moneda y lo que incluye
+            responden a lo que se pidió — aunque el detalle fino no esté
+            cerrado. No evalúes si el precio es alto o bajo: eso lo decide
+            quien aprueba, y no es tuyo.
+            Elige `rehacer` sólo si falta un dato sin el cual la cotización no
+            se puede sostener, o si lo cotizado no es lo que pidieron.
+            Elige `no_cotizar` si no hay nada que cotizar acá.
+          reads: [pedido, monto, moneda, validez, resumen]
+        held_in: por_aprobar
+        records: disposicion_propuesta
+        records_rationale: motivo_de_la_propuesta
+        branches:
+          # La única rama retenida, y la única que hace falta: aprobar el
+          # número ES aprobar el compromiso. Volver a cotizar o no cotizar no
+          # comprometen a nadie.
+          sostener:
+            to: aprobado
+            governance: require_approval
+            means: El número responde a lo que se pidió. Queda aprobado y vuelve al encargo.
+          rehacer:
+            to: por_cotizar
+            governance: allow
+            means: Falta un dato o lo cotizado no es lo que pidieron. Se cotiza de nuevo.
+          no_cotizar:
+            to: descartado
+            governance: allow
+            means: No hay nada que cotizar acá. El encargo sigue sin número.
+
+    notify:
+      por_aprobar:
+        message: >-
+          Tengo un presupuesto listo y está esperando que alguien decida.
+          Escribe APROBADO para soltarlo.
+
+    # -------------------------------------------------------------------------
+    # Y el número vuelve al encargo que lo pidió.
+    #
+    # Sólo desde `aprobado`: un presupuesto descartado no tiene nada que
+    # devolver, y hacer que un descarte avanzara el encargo sería contarle una
+    # cotización que nunca existió. El encargo espera en `esperando_presupuesto`
+    # y sigue esperando — que es honesto: nadie le puso precio.
+    # -------------------------------------------------------------------------
+    reports:
+      aprobado:
+        carries:
+          presupuesto_monto: monto
+          presupuesto_moneda: moneda
+          presupuesto_validez: validez
+          presupuesto_resumen: resumen
+        advances: presupuestado

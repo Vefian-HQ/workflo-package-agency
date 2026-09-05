@@ -16,6 +16,20 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.18.0 — ponerle precio antes de comprometerse. El juicio de una nota gana una
+# cuarta salida: hay trabajo, pero primero hay que saber cuánto sale. Eso abre un
+# `presupuesto` —trabajo aparte, con su propia meta, su propio juicio y su propia
+# aprobación— y el encargo espera en vez de cerrarse.
+#
+# Cuando el presupuesto se aprueba, el número vuelve solo al encargo que lo pidió:
+# cuánto, en qué moneda, hasta cuándo vale y qué incluye. Cuatro hechos, no un
+# documento. Un PDF, las líneas de detalle y los impuestos son otra conversación,
+# y el día que se pida se pide sobre esto.
+#
+# Un presupuesto descartado no devuelve nada, que es lo honesto: nadie le puso
+# precio, y el encargo sigue esperando en vez de recibir una cotización que no
+# existió.
+#
 # 0.17.0 — cuando la herramienta no contesta, se dice. QUE DICE le pregunta al
 # sistema que ejecuta, y esa pregunta puede quedar sin respuesta por motivos que
 # no son de nadie de acá: un token que venció, una caída, un límite de uso. Hasta
@@ -131,7 +145,7 @@
 # =============================================================================
 
 package: agency
-version: 0.17.0
+version: 0.18.0
 
 declares:
   cases: definition/cases.yaml

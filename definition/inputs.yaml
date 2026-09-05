@@ -390,3 +390,72 @@ inputs:
       # fuera ilegible, que es la manera más rápida de volver al bucle.
       min_confidence: 0.3
       records: lectura
+
+  # ===========================================================================
+  # Ponerle precio a lo que se pidió.
+  #
+  # Primera persona, como TOMO y ASIGNO: quien escribe reporta lo que hizo, no
+  # le da una orden a nadie. Y en prosa, como PARA: un formulario de cuatro
+  # campos para algo que se dice en una frase sería pedirle a una persona que
+  # hable como una base de datos.
+  # ===========================================================================
+  cotizar_presupuesto:
+    label: Ponerle precio
+    via: operator_channel
+    from: operator
+    advances: presupuesto
+    when_state: [por_cotizar]
+    phrase: COTIZO
+    captures:
+      cotizacion_cruda: rest
+    extracts:
+      from: rest
+      instruction: >
+        Alguien de la agencia le puso precio a un trabajo. Extrae de lo que
+        escribió cuánto sale, en qué moneda, hasta cuándo vale esa cotización y
+        qué incluye.
+        En `monto` pon sólo el número, sin símbolos ni separadores de miles.
+        En `moneda` pon las tres letras del código si se puede deducir de lo que
+        dijeron; si dijeron sólo «pesos» o «dólares» sin más, pon esa palabra
+        tal cual y no adivines el país.
+        En `validez` pon hasta cuándo vale, con las palabras que usaron.
+        En `resumen` pon en una oración qué incluye ese precio.
+        Si algo no lo dijeron, deja el campo vacío: un dato inventado en una
+        cotización es peor que un dato que falta.
+      fields:
+        monto: number
+        moneda: string
+        validez: string
+        resumen: string
+      # Sin monto no hay cotización. Lo demás se puede completar después; esto
+      # es lo único sin lo cual no hay nada que juzgar ni nada que devolver.
+      needs: [monto]
+      min_confidence: 0.3
+      records: lectura_de_la_cotizacion
+    to: [decidible]
+    # El acuse dice el número que acaba de guardar, y eso importa más de lo que
+    # parece: es la única vez que alguien lo ve escrito antes de aprobarlo.
+    acknowledge: >-
+      Anotado: {monto} {moneda}. Te digo qué propongo.
+
+  # ===========================================================================
+  # La misma palabra que suelta un juicio retenido en un encargo, sobre un
+  # presupuesto.
+  #
+  # Es la palabra de esta organización para «sueltas lo que estaba retenido», y
+  # significa lo mismo de los dos lados. Inventarle una segunda para el mismo
+  # acto sería pedirle a una persona que recuerde de qué tipo de trabajo está
+  # hablando antes de poder aprobarlo.
+  #
+  # Cada una alcanza sólo a su clase de trabajo, así que no compiten mientras no
+  # haya un encargo Y un presupuesto retenidos a la vez. Ese caso es el
+  # señalamiento ambiguo que ya está registrado, y no se resuelve acá.
+  # ===========================================================================
+  aprobar_presupuesto:
+    label: Aprobar un presupuesto
+    via: operator_channel
+    from: operator
+    phrase: APROBADO
+    advances: presupuesto
+    confirms: decidible
+    acknowledge: Aprobado. El número vuelve al encargo.
