@@ -16,6 +16,29 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.22.0 — cuando la herramienta hace algo, se dice. Todo lo que pasa en el
+# tablero ya se percibía y quedaba escrito; nadie se enteraba. Ahora dos cosas
+# llegan al canal: que alguien borró una tarea allá, y que la marcaron terminada
+# allá mientras acá sigue abierta.
+#
+# Dos y no más, a propósito. Contar cada movimiento sería un canal que alguien
+# silencia en dos días, y un canal silenciado es peor que uno vacío porque parece
+# cobertura. Estas dos cambian lo que una persona haría después; las demás se
+# perciben y se callan.
+#
+# Lo que todavía no se puede decir es lo que la vuelta no trae: quién quedó a
+# cargo allá y qué fecha le pusieron.
+#
+# 0.21.0 — qué está atrasado. La fecha viaja a la herramienta desde 0.16.0 y no
+# había forma de preguntar por ella: una vista compara hechos por igualdad, y una
+# fecha nunca es igual a nada útil. QUE ATRASADO contesta la pregunta que un área
+# hace todos los días.
+#
+# Vencido es antes de HOY, y hoy es donde trabaja esta organización — no donde
+# corre el servidor. Lo que vence hoy no está atrasado: el día no terminó, y
+# perseguir la mañana del vencimiento es equivocarse siempre. Lo que no tiene
+# fecha tampoco: no tener plazo no es llegar tarde.
+#
 # 0.20.2 — dos listas que existían y nadie podía mirar. ENVIADO y COBRADO piden
 # un número «de la lista que te mostré», y nunca se declaró la palabra que
 # muestra esas listas: quien escribía recibía «¿Cuál?» sobre algo que no había
@@ -196,7 +219,7 @@
 # =============================================================================
 
 package: agency
-version: 0.20.2
+version: 0.22.0
 
 declares:
   cases: definition/cases.yaml

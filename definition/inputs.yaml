@@ -410,6 +410,15 @@ inputs:
     answers_with: por_cobrar
     empty: No hay nada esperando cobro.
 
+  # La pregunta de todos los días, que hasta ahora no se podía hacer.
+  que_atrasado:
+    label: ¿Qué está atrasado?
+    via: operator_channel
+    from: operator
+    phrase: QUE ATRASADO
+    answers_with: lo_atrasado
+    empty: No hay nada atrasado.
+
   que_propuse:
     label: ¿Qué propuse?
     via: operator_channel

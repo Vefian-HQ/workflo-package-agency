@@ -161,6 +161,29 @@ cases:
           No pudimos anotar esta tarea en la herramienta donde ejecutan. Quedó
           coordinada acá y hay que crearla a mano.
 
+    # -------------------------------------------------------------------------
+    # Lo que se dice cuando la herramienta hace algo.
+    #
+    # Dos frases y no más. Todo lo que pasa en el tablero se percibe y queda
+    # escrito; contarlo entero sería un canal que alguien silencia en dos días, y
+    # un canal silenciado es peor que uno vacío porque parece cobertura.
+    #
+    # Estas dos cambian lo que una persona haría después: una tarea que ya no
+    # está allá deja de reflejar nada, y una que allá terminaron y acá sigue
+    # abierta es la pregunta «¿la cerramos?» que si no aparece no la hace nadie.
+    #
+    # Lo demás —que la muevan de columna, que le cambien la descripción— se
+    # percibe y se calla. Y lo que todavía no se puede decir es lo que la vuelta
+    # no trae: quién quedó a cargo allá, y qué fecha le pusieron.
+    # -------------------------------------------------------------------------
+    when_the_tool_says:
+      removed: >-
+        Alguien borró esta tarea en la herramienta. Acá sigue: si ya no va,
+        márcala HECHO.
+      done: >-
+        La marcaron terminada en la herramienta y acá sigue abierta. Si está
+        lista, escribe HECHO y el número.
+
     reflects:
       en_curso:
         to: task_manager

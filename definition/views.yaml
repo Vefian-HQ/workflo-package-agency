@@ -118,6 +118,26 @@ views:
       - by: opened_at
         direction: asc
 
+  # Lo que ya tendría que estar hecho. La pregunta que un área hace todos los
+  # días y que hasta ahora no se podía contestar: la fecha estaba guardada y no
+  # había forma de compararla contra hoy.
+  #
+  # Se pregunta por el día, no por el estado: una tarea vencida es vencida esté
+  # empezada o sin empezar, y esconder las que ya arrancaron sería esconder
+  # justamente las que alguien creyó tener bajo control.
+  lo_atrasado:
+    label: Lo que ya tendría que estar hecho
+    of: tarea
+    while_state: [por_hacer, en_curso, esperando]
+    overdue_by: vence
+    show:
+      - titulo
+      - vence
+      - responsable
+    order:
+      - by: vence
+        direction: asc
+
   encargos_por_aprobar:
     label: Esperando que alguien decida
     of: encargo
