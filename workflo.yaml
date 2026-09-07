@@ -16,6 +16,37 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.20.0 — que lo que salió, entre. Un presupuesto enviado abre una cobranza, y
+# la cobranza pregunta si ya se cobró y vuelve a preguntar a los siete días. Dos
+# veces y no más: a la tercera vuelta el problema dejó de ser que nadie vio la
+# pregunta, así que deja de insistir sola y propone qué hacer, esperando a una
+# persona antes de dar plata por perdida.
+#
+# Trae UNA palabra nueva: COBRADO. Lo demás se dice con palabras que esta
+# organización ya tiene — APROBADO suelta lo retenido, y «Por cobrar» es la
+# lista desde la que se señala. No hay facturación, ni pagos, ni conciliación:
+# lo que hacía falta era no olvidarse, y olvidarse es lo que pasa cuando el
+# seguimiento vive en la cabeza de alguien.
+#
+# Se le pregunta a quien coordina y no al cliente, porque este package todavía
+# no tiene canal con el cliente y declarar uno sería declarar algo que no
+# existe. El día que lo haya, la pregunta cambia de destinatario sin que cambie
+# lo que este trabajo significa.
+#
+# 0.19.0 — un presupuesto aprobado todavía no salió. Aprobar dejaba el trabajo
+# terminado, y terminado quiere decir cerrado: no había dónde anotar después que
+# el número se mandó, ni forma de ver un presupuesto que alguien aprobó y nadie
+# envió. Eso último es plata parada, y es de las cosas que una agencia necesita
+# mirar.
+#
+# Ahora aprobar deja el presupuesto ESPERANDO que salga, ENVIADO lo termina, y
+# «Aprobados y sin enviar» es una lista que se puede leer. El número sigue
+# volviendo al encargo al aprobarse, como hasta ahora: enviar es posterior y no
+# lo toca.
+#
+# Cuándo salió no se guarda como hecho: el stream del Case ya lo sabe, con la
+# hora del evento que lo movió.
+#
 # 0.18.0 — ponerle precio antes de comprometerse. El juicio de una nota gana una
 # cuarta salida: hay trabajo, pero primero hay que saber cuánto sale. Eso abre un
 # `presupuesto` —trabajo aparte, con su propia meta, su propio juicio y su propia
@@ -145,7 +176,7 @@
 # =============================================================================
 
 package: agency
-version: 0.18.0
+version: 0.20.0
 
 declares:
   cases: definition/cases.yaml

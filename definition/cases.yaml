@@ -482,7 +482,13 @@ cases:
       - por_cotizar     # nació, y nadie le puso número todavía
       - decidible       # ya tiene número: se puede juzgar si responde al pedido
       - por_aprobar     # el juicio está hecho y espera a una persona
+      # Aprobado NO es el final, y esa es la corrección. Un presupuesto que
+      # alguien aprobó y todavía no salió es información que esta organización
+      # necesita: es plata parada esperando que alguien apriete enviar. Si
+      # terminara acá el Case se cerraría, y un Case cerrado no acepta comandos
+      # — no habría dónde anotar que se envió.
       - aprobado
+      - enviado
       - descartado
 
     transitions:
@@ -493,10 +499,15 @@ cases:
       # razón: una rama sin salida desde acá es trabajo que se aprueba y queda
       # trabado.
       por_aprobar: [aprobado, descartado, por_cotizar, decidible]
-      aprobado: []
+      # Un presupuesto aprobado se manda o se cae; lo que no hace es volver a
+      # cotizarse sin volver a aprobarse.
+      aprobado: [enviado, descartado]
+      enviado: []
       descartado: []
 
-    goal_states: [aprobado, descartado]
+    # Enviar es el final: hasta que el número no salió de esta organización, el
+    # presupuesto no cumplió su meta — que es que quien lo pidió lo tenga.
+    goal_states: [enviado, descartado]
 
     variables:
       # Lo que el encargo pidió, para que quien cotiza no tenga que ir a
@@ -519,6 +530,15 @@ cases:
       resumen: string
       disposicion_propuesta: string
       motivo_de_la_propuesta: string
+      # Que salió. Un hecho y ninguna integración: quién lo mandó y por dónde es
+      # asunto de quien lo mandó, y esta organización todavía manda sus
+      # presupuestos a mano.
+      #
+      # CUÁNDO salió no se guarda acá a propósito: el stream del Case ya lo
+      # sabe, con la hora del evento que lo movió. Un hecho con la fecha sería
+      # una segunda respuesta a la misma pregunta, y dos respuestas es como una
+      # empieza a estar mal.
+      envio: string
 
     # -------------------------------------------------------------------------
     # El juicio: ¿este número responde a lo que se pidió?
@@ -571,6 +591,22 @@ cases:
           Escribe APROBADO para soltarlo.
 
     # -------------------------------------------------------------------------
+    # Salió, y ahora hay que cobrarlo.
+    #
+    # Cuelga de `enviado` y de ningún otro estado, y eso no es una regla que
+    # este bloque imponga: es dónde está escrito. Un presupuesto aprobado que
+    # nadie mandó no tiene nada que cobrar, y uno que espera aprobación menos.
+    # -------------------------------------------------------------------------
+    spawns:
+      enviado:
+        opens: cobranza
+        carries:
+          titulo: titulo
+          cliente: cliente
+          monto: monto
+          moneda: moneda
+
+    # -------------------------------------------------------------------------
     # Y el número vuelve al encargo que lo pidió.
     #
     # Sólo desde `aprobado`: un presupuesto descartado no tiene nada que
@@ -586,3 +622,118 @@ cases:
           presupuesto_validez: validez
           presupuesto_resumen: resumen
         advances: presupuestado
+
+  # ===========================================================================
+  # COBRANZA — que lo que salió, entre.
+  #
+  # Nace de un presupuesto que se envió, y su meta es saber si se cobró. Nada
+  # más: no hay facturación, ni pagos, ni conciliación bancaria, ni estado de
+  # cuenta. Lo que esta organización necesita hoy es no olvidarse, y olvidarse es
+  # lo que pasa cuando el seguimiento vive en la cabeza de alguien.
+  #
+  # ## Dos palabras nuevas, y ningún juicio
+  #
+  # COBRADO e INCOBRABLE. La pregunta dice qué escribir, así que contestar «sí» y
+  # decir que entró son el mismo acto y no dos: un input aparte para la respuesta
+  # habría sido una segunda forma de decir lo mismo, y la que sobra es siempre la
+  # que alguien termina usando mal.
+  #
+  # Y no hay `decides`: sobre un cobro que nadie contestó, un modelo no puede
+  # aportar nada que la persona no sepa mejor —si ese cliente siempre paga tarde,
+  # si conviene llamar— y pagar razonamiento para que proponga «insistir» es
+  # pagar por una obviedad. Dejar de preguntar y decirlo ES el escalamiento.
+  #
+  # ## A quién se le pregunta, y por qué a esa persona
+  #
+  # A quien coordina, no al cliente. Este package no tiene canal con el cliente
+  # —está postergado a propósito— y declarar uno acá sería declarar una
+  # integración que no existe. Así que el área pregunta hacia adentro: «¿esto ya
+  # se cobró?», y vuelve a preguntar si nadie contesta.
+  #
+  # El día que haya canal con el cliente, la pregunta puede mudarse de
+  # destinatario sin cambiar nada de lo que este trabajo significa.
+  # ===========================================================================
+  cobranza:
+    label: Cobranza
+    goal: Que lo que se presupuestó y salió, se cobre — o que se sepa que no.
+
+    initial_state: por_cobrar
+
+    states:
+      - por_cobrar      # salió, y todavía nadie preguntó nada
+      - preguntado      # se preguntó si entró, y no contestaron
+      - por_decidir     # nadie contestó después de insistir: lo mira una persona
+      - cobrado
+      - incobrable
+
+    transitions:
+      por_cobrar: [preguntado, cobrado]
+      # Que entró la termina. No contestar, después de insistir, la deja en
+      # manos de una persona.
+      preguntado: [cobrado, por_decidir]
+      # Lo que una persona puede hacer con un cobro que nadie contestó: decir
+      # que entró, darlo por perdido, o volver a preguntar.
+      por_decidir: [cobrado, incobrable, por_cobrar]
+      cobrado: []
+      incobrable: []
+
+    # Incobrable también termina. No es un logro —nadie consiguió nada— pero es
+    # un final, y un final que no cierra deja trabajo abierto compitiendo por
+    # cada comando que llega.
+    goal_states: [cobrado, incobrable]
+
+    # Trabado en alguien de afuera, y no es un tecnicismo: mientras se espera un
+    # cobro el próximo movimiento es del cliente —pagar— y no de esta
+    # organización. Que la respuesta entre por quien coordina es por dónde llega
+    # la información, no quién tiene la pelota.
+    awaits_input: [preguntado]
+
+    variables:
+      titulo: string
+      cliente: string
+      # Lo que se presupuestó, copiado al nacer. Copiado y no consultado: se
+      # cobra lo que se mandó, aunque después alguien recotice.
+      monto: number
+      moneda: string
+      # Cuál es la pregunta abierta, vacío cuando no hay ninguna. Lo que hace
+      # que un mensaje sea una RESPUESTA y no la próxima cosa que alguien dijo.
+      pregunta_pendiente: string
+      # Cuántas veces volvimos por la respuesta.
+      intentos_de_cobro: number
+
+    # -------------------------------------------------------------------------
+    # Preguntar, y volver a preguntar.
+    #
+    # La pregunta es escrita y no razonada: preguntar si entró la plata no tiene
+    # matices, y un modelo redactándola sería gastar razonamiento en una frase
+    # que siempre dice lo mismo.
+    #
+    # Siete días, no uno: perseguir un cobro cada mañana es acoso, y quien cobra
+    # sabe que una transferencia tarda. Dos intentos, como todo lo demás que esta
+    # organización persigue.
+    # -------------------------------------------------------------------------
+    asks:
+      por_cobrar:
+        question: ¿Ya cobramos esto? Escribe COBRADO y el número si ya entró.
+        records: pregunta_pendiente
+        then: preguntado
+        chase:
+          after: 7d
+          attempts: 2
+          records: intentos_de_cobro
+          message: ¿Seguimos esperando este cobro? Escribe COBRADO y el número si ya entró.
+          gives_up: por_decidir
+
+    # -------------------------------------------------------------------------
+    # Dejar de preguntar tiene que decirse.
+    #
+    # Y esto es el escalamiento entero: el trabajo queda esperando a una persona,
+    # y esa persona se entera. Sin palabra para escalar y sin un juicio que
+    # proponga algo — el aviso dice qué se puede hacer, y las dos cosas que se
+    # pueden hacer son palabras que ya existen.
+    # -------------------------------------------------------------------------
+    notify:
+      por_decidir:
+        message: >-
+          Este cobro lleva tiempo sin respuesta y dejé de preguntar. Escribe
+          COBRADO y el número si ya entró, o INCOBRABLE si no va a entrar.

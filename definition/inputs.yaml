@@ -335,6 +335,53 @@ inputs:
     # respuesta correcta a una frase que no dice cuál.
     acknowledge: Aprobado. Abro la tarea.
 
+  # ===========================================================================
+  # Entró la plata.
+  #
+  # Un participio, como HECHO y como ENVIADO: alguien reporta que pasó algo. Es
+  # la única palabra nueva que trae la cobranza, y trae una sola porque lo demás
+  # ya se dice con palabras que esta organización tiene — APROBADO suelta lo
+  # retenido, y contestar una pregunta no lleva palabra.
+  #
+  # Vale desde cualquier estado vivo: un cobro puede entrar mientras se pregunta,
+  # mientras se persigue o justo cuando alguien iba a darlo por perdido, y en los
+  # tres casos la respuesta correcta es la misma.
+  # ===========================================================================
+  cobrar:
+    label: Entró la plata
+    via: operator_channel
+    from: operator
+    advances: cobranza
+    when_state: [por_cobrar, preguntado, por_decidir]
+    phrase: COBRADO
+    refers_to: por_cobrar
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
+    to: [cobrado]
+    acknowledge: Anotado, quedó cobrado.
+
+  # ===========================================================================
+  # No va a entrar.
+  #
+  # La otra salida de un cobro que nadie contestó, y la única que necesita una
+  # palabra propia: dar plata por perdida es una decisión, y decirla en voz alta
+  # es lo que la deja registrada con quién la tomó.
+  # ===========================================================================
+  dar_por_incobrable:
+    label: No va a entrar
+    via: operator_channel
+    from: operator
+    advances: cobranza
+    when_state: [por_decidir]
+    phrase: INCOBRABLE
+    refers_to: por_cobrar
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
+    to: [incobrable]
+    acknowledge: Anotado, queda como incobrable.
+
   que_propuse:
     label: ¿Qué propuse?
     via: operator_channel
@@ -451,6 +498,33 @@ inputs:
   # haya un encargo Y un presupuesto retenidos a la vez. Ese caso es el
   # señalamiento ambiguo que ya está registrado, y no se resuelve acá.
   # ===========================================================================
+  # ===========================================================================
+  # El presupuesto salió.
+  #
+  # Un participio, como HECHO: alguien reporta que pasó algo, no le da una orden
+  # a nadie. Y lo reporta una persona porque una persona lo mandó — esta
+  # organización manda sus presupuestos a mano, y decir lo contrario sería
+  # declarar una integración que no existe.
+  #
+  # `sets` y nada más: no hay nada que leer. Que salió es un hecho binario, y la
+  # fecha la sabe la plataforma sin preguntarle a nadie.
+  # ===========================================================================
+  enviar_presupuesto:
+    label: El presupuesto salió
+    via: operator_channel
+    from: operator
+    advances: presupuesto
+    when_state: [aprobado]
+    phrase: ENVIADO
+    refers_to: presupuestos_por_enviar
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
+    sets:
+      envio: si
+    to: [enviado]
+    acknowledge: Anotado, quedó enviado.
+
   aprobar_presupuesto:
     label: Aprobar un presupuesto
     via: operator_channel

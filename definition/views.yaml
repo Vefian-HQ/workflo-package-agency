@@ -88,6 +88,36 @@ views:
       - by: opened_at
         direction: asc
 
+  # Plata parada: aprobada acá y todavía no salió. La vista existe por dos
+  # razones y las dos importan — es de dónde ENVIADO saca el número al que
+  # apuntar, y es la única forma de ver un presupuesto que alguien aprobó y
+  # nadie mandó.
+  presupuestos_por_enviar:
+    label: Aprobados y sin enviar
+    of: presupuesto
+    while_state: [aprobado]
+    show:
+      - titulo
+      - monto
+      - moneda
+    order:
+      - by: opened_at
+        direction: asc
+
+  # Lo que salió y todavía no entró. La lista desde la que se señala un cobro, y
+  # la única forma de ver de cuánto se está hablando sin abrir cada uno.
+  por_cobrar:
+    label: Por cobrar
+    of: cobranza
+    while_state: [por_cobrar, preguntado, por_decidir]
+    show:
+      - cliente
+      - monto
+      - moneda
+    order:
+      - by: opened_at
+        direction: asc
+
   encargos_por_aprobar:
     label: Esperando que alguien decida
     of: encargo
