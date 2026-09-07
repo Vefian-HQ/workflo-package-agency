@@ -382,6 +382,34 @@ inputs:
     to: [incobrable]
     acknowledge: Anotado, queda como incobrable.
 
+  # ===========================================================================
+  # Las dos listas que faltaban.
+  #
+  # `presupuestos_por_enviar` y `por_cobrar` se declararon para que ENVIADO y
+  # COBRADO tuvieran a qué apuntar, y nadie declaró cómo se miran. Una lista que
+  # sólo existe para que un comando le apunte es una lista de la que hay que
+  # adivinar el número: quien escribe no vio ninguna, y el «¿Cuál?» que recibe no
+  # tiene salida.
+  #
+  # Lo encontró la primera corrida real del arco completo, en el paso donde el
+  # presupuesto tenía que salir.
+  # ===========================================================================
+  que_envio:
+    label: ¿Qué tengo que enviar?
+    via: operator_channel
+    from: operator
+    phrase: QUE ENVIO
+    answers_with: presupuestos_por_enviar
+    empty: No hay presupuestos esperando salir.
+
+  que_cobro:
+    label: ¿Qué tengo que cobrar?
+    via: operator_channel
+    from: operator
+    phrase: QUE COBRO
+    answers_with: por_cobrar
+    empty: No hay nada esperando cobro.
+
   que_propuse:
     label: ¿Qué propuse?
     via: operator_channel

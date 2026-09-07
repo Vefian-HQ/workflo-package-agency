@@ -16,6 +16,15 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.20.2 — dos listas que existían y nadie podía mirar. ENVIADO y COBRADO piden
+# un número «de la lista que te mostré», y nunca se declaró la palabra que
+# muestra esas listas: quien escribía recibía «¿Cuál?» sobre algo que no había
+# visto nunca, y el código entre corchetes que la frase ofrece como salida sale
+# del mismo lugar. No había forma de contestar.
+#
+# QUE ENVIO y QUE COBRO. Lo encontró la primera corrida real del arco completo,
+# justo en el paso donde el presupuesto tenía que salir.
+#
 # 0.20.1 — pedir un precio no es trabajo para hacer. De la primera corrida real:
 # «nos pidieron presupuesto» se juzgó como trabajo que tomamos, con el motivo de
 # que lo que hay que entregar ES el presupuesto — así que abría una tarea para
@@ -187,7 +196,7 @@
 # =============================================================================
 
 package: agency
-version: 0.20.1
+version: 0.20.2
 
 declares:
   cases: definition/cases.yaml
