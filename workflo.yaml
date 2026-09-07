@@ -16,6 +16,17 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.20.1 — pedir un precio no es trabajo para hacer. De la primera corrida real:
+# «nos pidieron presupuesto» se juzgó como trabajo que tomamos, con el motivo de
+# que lo que hay que entregar ES el presupuesto — así que abría una tarea para
+# armarlo, en vez de pedirle el número a quien pone los precios.
+#
+# Era coherente y estaba mal, y el error era de la instrucción: decía cuándo
+# cotizar sin decir que armar una cotización no es trabajo de quien recibe la
+# nota. Ahora el juicio pregunta primero QUÉ están pidiendo — un precio, o que
+# hagamos algo — porque son dos cosas distintas y la frase que las confunde es la
+# más común que entra por acá.
+#
 # 0.20.0 — que lo que salió, entre. Un presupuesto enviado abre una cobranza, y
 # la cobranza pregunta si ya se cobró y vuelve a preguntar a los siete días. Dos
 # veces y no más: a la tercera vuelta el problema dejó de ser que nadie vio la
@@ -176,7 +187,7 @@
 # =============================================================================
 
 package: agency
-version: 0.20.0
+version: 0.20.1
 
 declares:
   cases: definition/cases.yaml

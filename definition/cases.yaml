@@ -323,6 +323,19 @@ cases:
     # -------------------------------------------------------------------------
     # El juicio, sobre una lista cerrada que escribió esta organización.
     #
+    # ## Quien juzga acá no es quien pone los precios
+    #
+    # De la primera corrida real: «nos pidieron presupuesto» se juzgó `aceptar`,
+    # con el motivo de que lo que hay que entregar ES el presupuesto — así que
+    # abrió una tarea para armarlo. Coherente, y equivocado: armar la cotización
+    # es de otra parte de la organización, y este juicio decide qué hacer con lo
+    # que alguien contó, no cómo se hace.
+    #
+    # Por eso la instrucción ahora pregunta primero QUÉ están pidiendo. Si piden
+    # un precio, se pide el precio; si piden que hagamos algo, se abre trabajo.
+    # Son dos cosas distintas y la frase que las confunde —«necesito un
+    # presupuesto»— es la más común que entra por este canal.
+    #
     # `proposes` es la regla determinista, y no está de adorno: es lo que decide
     # cuando no hay modelo, cuando la organización no paga por uno, cuando el
     # proveedor no contesta o cuando lo que contesta no tiene la forma pedida.
@@ -344,18 +357,25 @@ cases:
           instruction: >
             Eres quien decide qué hacer con algo que alguien de la agencia
             contó después de una reunión.
-            Elige `aceptar` si se sabe quién lo pide, qué hay que hacer y para
-            cuándo — aunque el alcance no esté del todo definido. El detalle fino se precisa
-            trabajando, no antes de empezar, y alguien va a revisar esta
-            propuesta antes de que se abra nada.
+            Primero decide QUÉ ES lo que están pidiendo, porque de eso depende
+            todo lo demás.
+            Elige `cotizar` si lo que piden es un PRECIO: un presupuesto, una
+            cotización, cuánto sale, una propuesta económica. También si el
+            trabajo se entiende pero nadie se puede comprometer sin saber
+            cuánto cuesta.
+            Poner precio NO es trabajo que hagas vos: se le pide a quien pone
+            los precios y vuelve con el número. Por eso «hay que entregar un
+            presupuesto» es `cotizar` y nunca `aceptar` — aceptar abriría una
+            tarea para ejecutar algo, y armar una cotización no es eso.
+            Elige `aceptar` si lo que piden es que HAGAMOS algo, y se sabe quién
+            lo pide, qué hay que hacer y para cuándo — aunque el alcance no esté
+            del todo definido. El detalle fino se precisa trabajando, no antes
+            de empezar, y alguien va a revisar esta propuesta antes de que se
+            abra nada.
             Elige `aclarar` sólo si falta algo SIN LO CUAL NO SE PUEDE EMPEZAR.
             No pidas más precisión sobre lo que ya se entiende, y no evalúes si
             tenemos tiempo, gente o presupuesto: eso es nuestro y no de quien
             pidió el trabajo.
-            Elige `cotizar` si hay trabajo pero antes hay que ponerle precio:
-            alguien pidió un presupuesto, o el compromiso depende de cuánto
-            sale. Pedir un precio no compromete nada — lo que se aprueba
-            después es la cotización.
             Elige `descartar` si no hay nada para hacer: es información.
           reads: [titulo, cliente, objetivo, alcance, plazo]
         held_in: por_aprobar
@@ -365,7 +385,7 @@ cases:
           aceptar:
             to: aceptado
             governance: require_approval
-            means: Es trabajo y lo tomamos. Se abre una tarea y alguien la ejecuta.
+            means: Es trabajo para hacer y lo tomamos. Se abre una tarea y alguien la ejecuta.
           # Pedir el precio no compromete a esta organización con nadie, así
           # que no espera a una persona: lo que sí espera es la cotización que
           # salga de acá, y eso se aprueba en el presupuesto y no en el encargo.
@@ -374,7 +394,7 @@ cases:
           cotizar:
             to: esperando_presupuesto
             governance: allow
-            means: Hay trabajo, pero antes hay que ponerle precio. Se pide un presupuesto y el encargo espera.
+            means: Lo que hace falta acá es un precio. Se pide el presupuesto a quien los arma, y el encargo espera el número.
           aclarar:
             to: incompleto
             governance: allow
