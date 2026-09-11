@@ -57,7 +57,10 @@ cases:
       - descartada
 
     transitions:
-      por_hacer: [en_curso, esperando, descartada]
+      # Terminar desde acá, sin pasar por empezar: alguien la hizo y no avisó,
+      # o dejó de hacer falta. Exigir que se declare empezada algo que ya está
+      # hecho es pedir que se mienta para poder decir la verdad.
+      por_hacer: [en_curso, esperando, hecha, descartada]
       en_curso: [esperando, hecha, por_hacer, descartada]
       esperando: [en_curso, hecha, descartada]
       hecha: []

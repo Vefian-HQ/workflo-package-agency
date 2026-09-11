@@ -89,6 +89,15 @@ inputs:
     to: [esperando]
     acknowledge: Anotado, queda esperando.
 
+  # ===========================================================================
+  # Una tarea que nadie empezó también puede estar hecha.
+  #
+  # Exigía `en_curso`, así que había que escribir EMPEZANDO antes — ceremonia
+  # para algo que pasa todo el tiempo: alguien la hizo y no avisó, o dejó de
+  # hacer falta. Lo encontró el aviso del tablero, que termina en «márcala
+  # HECHO» sobre trabajo que está justamente en `por_hacer`: el área recomendaba
+  # un comando que la máquina rechazaba.
+  # ===========================================================================
   terminar_tarea:
     label: La tarea está hecha
     via: operator_channel
@@ -96,7 +105,7 @@ inputs:
     advances: tarea
     # Nada salta de `por_hacer` a `hecha`: algo que nadie empezó y que ya está
     # hecho no pasó por acá, y la máquina de la tarea lo dice antes que nadie.
-    when_state: [en_curso]
+    when_state: [por_hacer, en_curso, esperando]
     phrase: HECHO
     refers_to: que_hago_ahora
     which_one: >-

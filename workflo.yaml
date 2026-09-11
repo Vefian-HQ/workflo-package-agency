@@ -16,6 +16,15 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.22.1 — una tarea que nadie empezó también puede estar hecha. HECHO exigía
+# `en_curso`, así que había que escribir EMPEZANDO antes: ceremonia para el caso
+# más común —alguien la hizo y no avisó, o dejó de hacer falta.
+#
+# Lo encontró el aviso del tablero, que termina en «márcala HECHO» sobre trabajo
+# que está justamente en `por_hacer`: el área recomendaba un comando que la
+# máquina rechazaba, y lo que contestaba era «¿Cuál?» sobre una tarea nombrada
+# por su propio código.
+#
 # 0.22.0 — cuando la herramienta hace algo, se dice. Todo lo que pasa en el
 # tablero ya se percibía y quedaba escrito; nadie se enteraba. Ahora dos cosas
 # llegan al canal: que alguien borró una tarea allá, y que la marcaron terminada
@@ -219,7 +228,7 @@
 # =============================================================================
 
 package: agency
-version: 0.22.0
+version: 0.22.1
 
 declares:
   cases: definition/cases.yaml
