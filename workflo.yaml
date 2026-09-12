@@ -16,6 +16,18 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.23.0 — QUE DICE deja de leer el tablero entero. Preguntarle a la herramienta
+# qué tiene devolvía TODO lo que tiene: sus propias tareas de onboarding, la
+# lista personal de alguien, tres años de otro equipo. En un tablero de verdad
+# esa respuesta no se puede leer.
+#
+# Ahora contesta sobre el trabajo que esta organización le entregó, que es lo
+# que el comando existe para comparar. «Nuestro» quiere decir que le pasamos la
+# tarea y guardamos la referencia — no adivinar por título ni por quién la creó.
+#
+# Sigue siendo una pregunta sobre la herramienta: lo que vuelve es lo que dice
+# ELLA de esas tareas, que puede diferir de lo que decimos acá.
+#
 # 0.22.1 — una tarea que nadie empezó también puede estar hecha. HECHO exigía
 # `en_curso`, así que había que escribir EMPEZANDO antes: ceremonia para el caso
 # más común —alguien la hizo y no avisó, o dejó de hacer falta.
@@ -228,7 +240,7 @@
 # =============================================================================
 
 package: agency
-version: 0.22.1
+version: 0.23.0
 
 declares:
   cases: definition/cases.yaml

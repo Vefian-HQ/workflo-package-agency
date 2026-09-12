@@ -249,6 +249,16 @@ inputs:
     # Preguntado en el momento, guardado por nadie. Apuntado a un renglón,
     # pregunta por esa tarea; apuntado a nada, pregunta por todas.
     lists: task_manager
+    # Sólo lo que esta organización le entregó a esa herramienta. Un tablero de
+    # verdad tiene encima las tareas de onboarding del propio proveedor, la
+    # lista personal de alguien y tres años de otro equipo: preguntarle qué
+    # tiene y leer todo eso de vuelta no sirve para nada el día que hay más de
+    # cinco cosas.
+    #
+    # La pregunta sigue siendo sobre la herramienta y no sobre Workflo: lo que
+    # contesta es lo que dice ELLA de las tareas que le pasamos, que es
+    # exactamente para lo que existe este comando.
+    only_what_we_handed_off: true
     refers_to: que_hago_ahora
     which_one: >-
       ¿Cuál? Dime el número que te mostró la lista, o el código entre
