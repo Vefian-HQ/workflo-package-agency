@@ -16,6 +16,22 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.24.0 — un título deja de llevarse todo. Alguien salió de una reunión y
+# escribió «TAREA …» con diez puntos abajo: las diez líneas terminaron adentro
+# del título, y la tarea quedó con un nombre de diez líneas y la descripción
+# vacía.
+#
+# El lugar para el resto ya existía. `nota` viaja a la herramienta como
+# descripción y nadie la estaba usando: ahora la primera línea es el título y lo
+# que va debajo es la nota. Un mensaje de una línea guarda exactamente lo mismo
+# que antes.
+#
+# Y varias cosas en un mensaje ya se podían: cada línea que empieza con la
+# palabra es su propia pieza de trabajo. Seis TAREA seguidas son seis tareas.
+# Una lista bajo una palabra y una lista de palabras tienen la misma forma y
+# significan lo contrario, así que la plataforma no adivina: lo dice quien
+# escribe, repitiendo la palabra o no repitiéndola.
+#
 # 0.23.0 — QUE DICE deja de leer el tablero entero. Preguntarle a la herramienta
 # qué tiene devolvía TODO lo que tiene: sus propias tareas de onboarding, la
 # lista personal de alguien, tres años de otro equipo. En un tablero de verdad
@@ -240,7 +256,7 @@
 # =============================================================================
 
 package: agency
-version: 0.23.0
+version: 0.24.0
 
 declares:
   cases: definition/cases.yaml

@@ -29,8 +29,19 @@ inputs:
     from: operator
     opens: tarea
     phrase: TAREA
+    # La primera línea es el título; lo que va debajo es la nota.
+    #
+    # Antes el título se llevaba TODO lo que seguía a la palabra, así que quien
+    # salía de una reunión y escribía «TAREA …» con diez puntos abajo terminaba
+    # con una tarea cuyo nombre tenía diez líneas. El lugar para el resto ya
+    # existía —`nota` viaja a la herramienta como descripción— y nadie lo estaba
+    # usando.
+    #
+    # Un mensaje de una línea guarda exactamente lo mismo que antes y la nota
+    # queda vacía: escribir «TAREA revisar el contrato» no cambió en nada.
     captures:
-      titulo: rest
+      titulo: first_line
+      nota: rest_of_lines
       # Quien la anota se la queda. Es lo que hace una persona cuando escribe
       # «TAREA revisar el contrato»: no está llenando el backlog de la empresa,
       # está anotando algo que va a hacer. Si es de otro, ASIGNO la mueve.
