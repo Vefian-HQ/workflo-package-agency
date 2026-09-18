@@ -223,6 +223,40 @@ inputs:
       prioridad: alta
     acknowledge: Listo, queda arriba.
 
+  agrupar_tarea:
+    label: En qué proyecto va
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso, esperando]
+    phrase: EN
+    refers_to: todo_el_trabajo
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
+    captures:
+      # El nombre del proyecto, que es como la gente lo llama. Lo que señala a
+      # la tarea ya viene descontado de `rest`, así que esto es sólo el nombre.
+      proyecto: rest
+    acknowledge: Anotado, queda en {proyecto}.
+
+  parte_de_tarea:
+    label: De qué tarea es parte
+    via: operator_channel
+    from: operator
+    advances: tarea
+    when_state: [por_hacer, en_curso, esperando]
+    phrase: PARTE DE
+    refers_to: todo_el_trabajo
+    which_one: >-
+      ¿Cuál? Dime el número que te mostró la lista, o el código entre
+      corchetes.
+    captures:
+      # El código de la tarea de la que ésta cuelga. Un código y no un título:
+      # dos tareas pueden llamarse igual, y el código no cambia nunca.
+      parte_de: rest
+    acknowledge: Anotado, queda colgando de esa tarea.
+
   que_hago_ahora:
     label: ¿Qué hago ahora?
     via: operator_channel

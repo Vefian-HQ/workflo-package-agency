@@ -74,6 +74,9 @@ cases:
 
     variables:
       titulo: string
+      # De qué proyecto es parte, por su nombre. Un tablero ES un proyecto:
+      # alguien lo abre con PROYECTO, tiene nombre, quién lo pidió y su propia
+      # vida, y las tareas dicen a cuál pertenecen.
       proyecto: string
       prioridad: string     # alta · normal — el orden del backlog
       # Para cuándo es, en día concreto: AAAA-MM-DD. Es lo único que una
@@ -91,6 +94,14 @@ cases:
       responsable: string
       esperando_a: string
       nota: string
+      # De qué tarea es parte, cuando es parte de una. El código de cuatro
+      # caracteres que la otra tarea ya tiene — no un vínculo entre trabajos.
+      #
+      # Se modela con un hecho a propósito: una relación tipada entre piezas de
+      # trabajo está registrada como AG-1 desde agosto, y difiere a que aparezca
+      # algo que el hecho no cubra. Mostrar lo que cuelga de una tarea no lo
+      # necesita: alcanza con preguntar quién dice ser parte de ella.
+      parte_de: string
       # Lo ÚNICO que Workflo guarda de la tarea que vive afuera: un handle
       # opaco, con quién lo emitió pegado adelante. Ni el título de allá, ni su
       # estado, ni una copia de nada. Dos sistemas guardando el mismo dato es

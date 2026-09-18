@@ -16,6 +16,26 @@
 # proveedor nuevo, ningún nombre de herramienta, y el camino de comandos que ya
 # funcionaba queda intacto.
 #
+# 0.26.0 — una tarea grande se parte en varias. PARTE DE cuelga una tarea de
+# otra, señalando la grande por su código: una subtarea no es un tipo de trabajo
+# nuevo, es una tarea con su estado, su responsable y su fecha que además sabe de
+# quién es parte.
+#
+# Se guarda como un hecho y no como un vínculo entre trabajos. Una relación
+# tipada está registrada como AG-1 desde agosto y sigue esperando algo que el
+# hecho no cubra: mostrar lo que cuelga de una tarea no lo necesita, alcanza con
+# preguntar quién dice ser parte de ella.
+#
+# 0.25.0 — una tarea puede decir en qué proyecto va. `proyecto` estaba declarado
+# desde el principio y ningún comando lo llenaba, así que todo el trabajo vivía
+# en una sola pila sin forma de agruparlo.
+#
+# EN, como PARA: una preposición delante de lo que agrega. «EN Portal Nordika 3»
+# pone esa tarea en ese proyecto, y el nombre es el que la persona escribió — no
+# un vínculo a otro trabajo. Agrupar tareas y llevar un proyecto son dos cosas
+# distintas, y unirlas obligaría a abrir un proyecto entero para poder ordenar
+# tres tareas.
+#
 # 0.24.0 — un título deja de llevarse todo. Alguien salió de una reunión y
 # escribió «TAREA …» con diez puntos abajo: las diez líneas terminaron adentro
 # del título, y la tarea quedó con un nombre de diez líneas y la descripción
@@ -256,7 +276,7 @@
 # =============================================================================
 
 package: agency
-version: 0.24.0
+version: 0.26.0
 
 declares:
   cases: definition/cases.yaml
